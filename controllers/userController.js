@@ -35,7 +35,7 @@ const addUser = async (request, response) => {
 
 const loginUser =  async (request, response) => {
   try {
-    const {Name, email, password} = request.body
+    const {email, password} = request.body
     const user = await User.findOne({ email })
 
     // searching for the user if it exists 
@@ -57,8 +57,7 @@ const loginUser =  async (request, response) => {
       { 
         id: user._id,
         email: user.email,
-        firstName: user.firstName, 
-        lastName: user.lastName, 
+        Name: user.Name,
         role: user.role
       }, 
       process.env.ACCESS_TOKEN_SECRET,
@@ -71,8 +70,7 @@ const loginUser =  async (request, response) => {
       {
         id: user._id,
         email: user.email,
-        firstName: user.firstName, 
-        lastName: user.lastName, 
+        Name: user.Name,
         role: user.role
       },
       process.env.REFRESH_TOKEN_SECRET,
