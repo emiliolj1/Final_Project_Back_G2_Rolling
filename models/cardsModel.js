@@ -1,11 +1,12 @@
 const {model, Schema} = require('mongoose')
 
 const cardSchema =  new Schema({
-  Title: String,
   id: id,
-  cuantity: Number,
+  Title: String,
   img: img,
+  cuantity: Number,
   description: String,
+  price: Number
 });
 
-module.exports = model('card', Schema)
+module.exports = model('card', cardSchema)

@@ -94,14 +94,6 @@ const loginUser =  async (request, response) => {
   }
 };
 
-// only admin use.
-const getAllUsers = async() => {
-  try {
-    const users = await User.find({})
-    response.status(200).json(users)
-  } catch (error) {
-    response.status(400).json({ message: 'No se pudieron encontrar usuarios' })
-  }
-};
 
-module.exports = { addUser, loginUser, getAllUsers };
+
+module.exports = { addUser, loginUser};
