@@ -94,6 +94,13 @@ const loginUser =  async (request, response) => {
   }
 };
 
+const changePassword = async () => {
+  try {
+    
+  } catch (error) {
+    
+  }
+}
 
 
-module.exports = { addUser, loginUser};
+module.exports = { addUser, loginUser };
