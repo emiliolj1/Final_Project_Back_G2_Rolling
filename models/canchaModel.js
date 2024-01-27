@@ -5,6 +5,7 @@ const canchaSchema = new Schema ({
   id: id,
   img: Image,
   description: String,
+  Date: Date,
 })
 
 module.exports = model('cancha', canchaSchema)

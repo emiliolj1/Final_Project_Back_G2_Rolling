@@ -33,13 +33,14 @@ const getAllProducts = async () => {
 }
 
 const createCancha = async () => {
-  const { Title, description, id, img } = response.body
+  const { Title, description, id, img, Date} = response.body
   try {
     const Newcard = new card ({
       Title,
       id,
       img,
       description,
+      Date
     })
 
     await Newcard.save()
