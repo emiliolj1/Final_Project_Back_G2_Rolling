@@ -24,12 +24,8 @@ const addUser = async (request, response) => {
 
     await newUser.save()
     response.status(200).json({ message: 'el usuario fue creado con exito' })
-    const myModal = new bootstrap.Modal(document.getElementById(''),{});
-    myModal.show()
   } catch (error) {
-    response.status(400).json({ message: 'no se pudo crear el usuario' })
-    const myModal = new bootstrap.Modal(document.getElementById(''),{});
-    myModal.show() 
+    response.status(400).json({ message: 'no se pudo crear el usuario' }) 
   }
 };
 
@@ -40,16 +36,12 @@ const loginUser =  async (request, response) => {
 
     // searching for the user if it exists 
     if(!user){
-      const myModal = new bootstrap.Modal(document.getElementById('ModalError'), {});
-      myModal.show()
       return response.status(400).json({message: 'usuario no existe'})
     }
 
     // the user exist, their password is the same?
     const isMatch = bcrypt.compareSync(password, user.password)
     if(!isMatch){
-      const myModal = new bootstrap.Modal(document.getElementById('ModalError'), {});
-      myModal.show()
       return response.status(400).json({ message: 'contraseña invalida' })
     }
 
@@ -85,23 +77,35 @@ const loginUser =  async (request, response) => {
 
     response.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 })
     response.status(200).json({ accessToken })
-    const myModal = new bootstrap.Modal(document.getElementById('ModalError'), {});
-    myModal.show()
   } catch (error) {
     response.status(500).json({ message: error.message })
-    const myModal = new bootstrap.Modal(document.getElementById('ModalError'), {});
-    myModal.show()
   }
 };
 
-// only admin use.
-const getAllUsers = async() => {
-  try {
-    const users = await User.find({})
-    response.status(200).json(users)
-  } catch (error) {
-    response.status(400).json({ message: 'No se pudieron encontrar usuarios' })
-  }
-};
+// en desarrollo
 
-module.exports = { addUser, loginUser, getAllUsers };
+// const changePassword = async (request, response) => {
+//   try {
+//     const { email, newPassword } = request.body
+//     const user = await User.findOne({ email })
+
+//     // searching for the user if it exists 
+//     if(!user){
+//       return response.status(400).json({message: 'usuario no existe'})
+//     }
+
+//     if(user.email === email){
+//       const saltRounds = 10;
+//       const salt = bcrypt.genSaltSync(saltRounds);
+//       const hash = bcrypt.hashSync(newPassword, salt);
+//       user.password = hash
+//       await user.save()
+//     }
+//     response.status(200).json({ message: 'el usuario cambio la contrasena con exito' })
+//   } catch (error) {
+//     response.status(400).json({ message: 'el usuario no pudo realizar la accion', error: error.message })
+//   }
+// }
+
+
+module.exports = { addUser, loginUser, changePassword };
