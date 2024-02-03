@@ -16,7 +16,7 @@ Here I leave the different links to the different documentation of the tools use
 >If you click on the name of the tools it will take you to its documentation, as always we recommend reading it.
 
 ## Report issue
-If you discovered any problem, do not hesitate to contact an administrator or developer of the project, to contact support use the following email: [....@gmail.com]()
+If you discovered any problem, do not hesitate to contact an administrator or developer of the project, to contact support use the following email: [sale.fulbo.10@gmail.com](sale.fulbo.10@gmail.com)
 
 >[!Note]
 >Technical support is available Monday to Friday from 7 a.m. to 9:30 a.m.
