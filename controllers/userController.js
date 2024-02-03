@@ -1,20 +1,18 @@
 require('dotenv').config();
-const { response, request } = require('express');
-const User = require('../models/userModel');
+const { User } = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const addUser = async (request, response) => {
   // in a constant we put everything we want to control
-  const { Name, email, password, role, refreshToken} = request.body
+  const { Name, email, password, role} = request.body
   try {
     // we use the schema
     const newUser = new User({
       Name,
       email,
       password,
-      role,
-      refreshToken
+      role
     })
     // use the tool bcrypt to generate an encrypted password
     const saltRounds = 10;
