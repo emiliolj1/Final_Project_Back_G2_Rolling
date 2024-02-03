@@ -1,22 +1,23 @@
 require('dotenv').config();
-const { response } = require('express');
+const { response, request } = require('express');
 const User = require('../models/userModel');
-const card = require('../models/cardsModel')
+const Products = require('../models/cardsModel');
+const Cancha = require('../models/canchaModel')
 
 
 const createProduct = async (request, response) => {
-  const { Title, description, id, img, cuantity, price} = response.body
+  const { Title, description, id, img, price} = request.body
   try {
-    const Newcard = new card ({
+    //we use the schema from the userModel
+    const NewProduct = new Products ({
       Title,
       id,
-      cuantity,
       img,
       description,
       price,
     })
-
-    await Newcard.save()
+    //save the new product in the data base
+    await NewProduct.save()
     response.status(200).json({message: 'se creo con exito'})
   } catch (error) {
     response.status(400).json({message: 'no se pudo crear.'})
@@ -25,25 +26,27 @@ const createProduct = async (request, response) => {
 
 const getAllProducts = async () => {
   try {
-    const products = await product.find({})
+    //we use find({}) to get all productos from the server
+    const products = await Products.find({})
     response.status(200).json(products)
   } catch (error) {
-    response.status(400).json({ message: 'No se pudieron encontrar los productos' })
+    response.status(500).json({ message: 'No se pudieron encontrar los productos' })
   }
 }
 
 const createCancha = async () => {
-  const { Title, description, id, img, Date} = response.body
+  const { Title, description, id, img, Date} = request.body
   try {
-    const Newcard = new card ({
+    //we use the schema from the canchaModel
+    const NewCancha = new Cancha ({
       Title,
       id,
       img,
       description,
       Date
     })
-
-    await Newcard.save()
+    //then we save the new cancha
+    await NewCancha.save()
     response.status(200).json({message: 'se creo con exito'})
   } catch (error) {
     response.status(400).json({message: 'no se pudo crear.'})
@@ -52,32 +55,50 @@ const createCancha = async () => {
 
 const getAllCancha = async () => {
   try {
-    const canchas = await cancha.find({})
+    // we use find({}) to get all from canchas in the data base
+    const canchas = await Cancha.find({})
     response.status(200).json(canchas)
   } catch (error) {
-    response.status(400).json({ message: 'No se pudieron encontrar los productos' })
+    response.status(500).json({ message: 'No se pudieron encontrar los productos' })
   }
 }
 
 const getAllUsers = async() => {
   try {
+    // we use find({}) to get all from users in the data base
     const users = await User.find({})
     response.status(200).json(users)
   } catch (error) {
-    response.status(400).json({ message: 'No se pudieron encontrar usuarios' })
+    response.status(500).json({ message: 'No se pudieron encontrar usuarios' })
   }
 };
 
-const DeleteProducts = async (request, response) => {
-  const { id } = response.body
+const UserDisable = async (request, response) => {
+  const {id} = request.body
   try {
+    const users = await User.findOne({_id: id})
+    if(!users){
+      return response.status(400).json({message:'no se encontro al usuario'})
+    }
+    
+    
+  } catch (error) {
+    
+  }
+}
 
-    const product = await card.findOne({_id: id});
+const DeleteProducts = async (request, response) => {
+  //we use an input where the user can write a number
+  const { id } = request.body
+  try {
+    // the number from the front is a id, then use these id to find the product in the data base
+    const product = await Products.findOne({_id: id});
+    // we check if the product exist
     if(!product){
       return response.status(400).json({message: 'no existe el producto'})
     }
-    
-    await card.deleteOne({_id: id})
+    // and if it exist we delete the product by id
+    await Products.deleteOne({_id: id})
 
   } catch (error) {
     response.status(400).json({message: 'no se pudo realizar la accion'})
@@ -85,15 +106,17 @@ const DeleteProducts = async (request, response) => {
 }
 
 const DeleteCanchas = async (request, response) => {
-  const { id } = response.body
+  //we use an input where the user can write a number
+  const { id } = request.body
   try {
-
-    const canchas = await cancha.findOne({_id: id})
-    if(!cancha){
+    // the number from the front is a id, then use these id to find the cancha in the data base
+    const canchas = await Cancha.findOne({_id: id})
+    //we check if the cancha exist
+    if(!canchas){
       return response.status(400).json({message:'no existe la cancha'})
     }
-
-    await cancha.deleteOne({_id: id})
+    //if it exist we delete the cancha by id
+    await Cancha.deleteOne({_id: id})
   } catch (error) {
     response.status(400).json({message: 'no se pudo realizar la accion'})
   }
