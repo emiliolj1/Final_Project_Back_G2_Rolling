@@ -2,10 +2,10 @@ const jwt =  require('jsonwebtoken')
 require('dotenv').config();
 
 const verifytoken = (request, response, next) => {
-  let token = request.header('Authorization')
+  let token = request.header('Authorization');
 
   if(token.startsWith('Bearer ')){
-    token = token.slice(7, token.lenght).trimLeft()
+    token = token.slice(7, token.lenght).trimLeft();
   }
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
