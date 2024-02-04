@@ -3,6 +3,6 @@ const route = Router()
 const { addUser, changePassword } = require('../controllers/userController')
 
 route.post('/users', addUser)
-route.post('/users', changePassword)
+route.post('/change', changePassword)
 
 module.exports = route

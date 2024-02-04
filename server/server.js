@@ -10,6 +10,7 @@ const { corsOptions } = require('../config/corsOptions')
 //Controllers
 const addUser = require('../router/userRoute')
 const loginUser = require('../router/authRoutes');
+const changePassword = require('../router/userRoute')
 // const createProduct = require('../router/adminRoute')
 // const createCancha = require('../router/adminRoute')
 // const getAllUsers = require('../router/adminRoute')
@@ -26,7 +27,8 @@ app.use(cookieParser())
 
 //Routes
 app.use('/', addUser);
-app.use('/', loginUser)
+app.use('/', loginUser);
+app.use('/', changePassword)
 
 app.listen(process.env.PORT, () => {
     console.log(`Escuchando por el puerto ${process.env.PORT}`);
