@@ -80,12 +80,29 @@ const UserDisable = async (request, response) => {
     if(!users){
       return response.status(400).json({message:'no se encontro al usuario'})
     }
-    
-    
   } catch (error) {
-    
+
   }
 };
+
+const changeRole = async(request, response) => {
+  const {id, newRole} = request.body
+  try {
+    const user = await User.findOne({_id: id});
+    if (!user) {
+      return response.status(404).json({ message: 'Usuario no encontrado' });
+    }
+    if(![user, admin].includes(newRole)){
+      response.status(200).json({message:'rol no valido'})
+    }
+    if([user, admin].includes(newRole)){
+      await User.save()
+      response.status(200).json({message:'se pudo cambiar el rol con exito'})
+    }
+  } catch (error) {
+    response.status(500).json({message:'error en ejecutar la funcion'})
+  }
+}
 
 const DeleteUser = async (request, response) => {
   const {id} = request.body;
