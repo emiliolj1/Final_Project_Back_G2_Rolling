@@ -92,10 +92,10 @@ const changeRole = async(request, response) => {
     if (!user) {
       return response.status(404).json({ message: 'Usuario no encontrado' });
     }
-    if(![user, admin].includes(newRole)){
+    if(![client, admin].includes(newRole)){
       response.status(200).json({message:'rol no valido'})
     }
-    if([user, admin].includes(newRole)){
+    if([client, admin].includes(newRole)){
       await User.save()
       response.status(200).json({message:'se pudo cambiar el rol con exito'})
     }
