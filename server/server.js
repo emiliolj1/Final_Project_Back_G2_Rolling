@@ -8,8 +8,8 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const { corsOptions } = require('../config/corsOptions');
 
-// Controllers
-const addUser = require('../router/userRoute');//users controllers
+//Controllers
+const addUser = require('../router/userRoute')
 const loginUser = require('../router/authRoutes');
 const changePassword = require('../router/userRoute');
 
