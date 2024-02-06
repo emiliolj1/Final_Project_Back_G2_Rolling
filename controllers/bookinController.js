@@ -1,17 +1,27 @@
 require('dotenv').config();
 const { response, request } = require('express');
-const { bookin } = require('../models/bookinModel')
+const { bookin } = require('../models/bookinModel');
+const { Cancha } = require('../models/canchaModel');
+const { User } = require('../models/userModel');
 
 
-
+//no anda
 const bookins = async (request, response) => {
-    const {Date, Hora, Email} = request.body
+    const {Date, Hora, Email, id} = request.body
     try {
         const booking = await bookin.findOne({Date, Hora})
+        const cancha = await Cancha.findOne({_id: id})
+        const user = await User.findOne({email : Email})
         if(booking){
             return response.status(400).json({message:'ya existe una reserva en esa hora'})
         }
-        if(!booking){
+        if (!cancha) {
+            return response.status(404).json({ message: 'La cancha especificada no existe' });
+        }
+        if (!user) {
+            return response.status(404).json({ message: 'El usuario especificado no existe' });
+        }
+        if(!booking && cancha.id === id && user.email === Email){
             const reserve = new bookin({
                 Date,
                 Hora,
@@ -35,33 +45,22 @@ const getAllBookin = async () => {
     }
 }
 
+//no anda
 const checkTime = async (request, response) => {
     try {
-        const bookins = await bookin.find({});
-        let now = new Date()
-        
-        if(!bookins) {
-            return response.status(400).json({message:'no existe la reserva'})
-        }
-        for (const booking of bookins){
-            const bookinDateTime = new Date(`${bookin.Date}${bookin.Time}`)
-            if(bookinDateTime.getTime() < now.getTime()){
-                await bookin.deleteOne({_id: booking._id})
-            }
-        }
-  
-        // // const filter = time.filter(booking => new Date(booking.Date).getTime() < Date.now() || new Date(booking.Time).getTime() < Date.now())
-        // // filter.forEach(async booking => {
-        // //     await bookin.deleteOne({_id: booking._id})
-        // // })
+        const bookins = await bookin.find({})
+        let bookinparserDate = bookin.Date.parse()
+        let bookinparserHour = bookin.Hour.parse()
+        let timestamp =  Date.now()
 
-        return response.json({ message: 'Reservas eliminadas con éxito' });
+        response.json({ message: 'Reservas eliminadas con éxito' });
     } catch (error) {
         response.status(500).json({message:'no se pudo realizar el borrado automatico'})
     }
 }
 
-const deleteBookin = async (request, reponse) => {
+// anda
+const deleteBookin = async (request, response) => {
     const { id } = request.body
     try {
         const bookins = await bookin.findOne({_id:id})

@@ -101,13 +101,12 @@ const changeRole = async(request, response) => {
     if (!user) {
       return response.status(404).json({ message: 'Usuario no encontrado' });
     }
-    if(![client, admin].includes(newRole)){
-      response.status(200).json({message:'rol no valido'})
+    if(!['client','admin'].includes(newRole)){
+      response.status(400).json({message:'rol no valido'})
     }
-    if([client, admin].includes(newRole)){
-      await User.save()
-      response.status(200).json({message:'se pudo cambiar el rol con exito'})
-    }
+    user.role = newRole;
+    await user.save();
+    return response.status(200).json({ message: 'Se cambió el rol correctamente' });
   } catch (error) {
     response.status(500).json({message:'error en ejecutar la funcion'})
   }
@@ -123,7 +122,7 @@ const DeleteUser = async (request, response) => {
     if(user){
       await User.deleteOne({_id:id})
     }
-
+    response.status(200).json({message:'se pudo eliminar el usuario'})
   } catch (error) {
     response.status(400).json({message:'no se pudo realizar la accion'})
   }
@@ -143,7 +142,7 @@ const DeleteProducts = async (request, response) => {
     if(product){
       await Product.deleteOne({_id: id});
     }
-
+    response.status(200).json({message:'se pudo eliminar el producto'})
   } catch (error) {
     response.status(400).json({message: 'no se pudo realizar la accion'});
   }

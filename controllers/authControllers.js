@@ -29,7 +29,7 @@ const loginUser =  async (request, response) => {
       }, 
       process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: '120s'
+        expiresIn: '300s'
       }
     )
 
