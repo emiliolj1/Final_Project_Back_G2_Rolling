@@ -2,8 +2,9 @@ const {model, Schema} = require('mongoose')
 
 const bookinSchema = new Schema ({
     Date: Date,
-    Time: Time,
-    email: String
+    Hora: String,
+    Email: String
 })
 
-module.exports = model ('bookin', bookinSchema)
+const bookin = model('bookin', bookinSchema)
+module.exports = { bookin }
