@@ -8,9 +8,11 @@ const cors = require('cors')
 const { corsOptions } = require('../config/corsOptions')
 
 //Controllers
-const addUser = require('../router/userRoute')
+const addUser = require('../router/userRoute');
 const loginUser = require('../router/authRoutes');
-const changePassword = require('../router/userRoute')
+const changePassword = require('../router/userRoute');
+const bookins = require('../router/bookinRoutes')
+const handleLogout = require('../router/logoutRoutes')
 // const createProduct = require('../router/adminRoute')
 // const createCancha = require('../router/adminRoute')
 // const getAllUsers = require('../router/adminRoute')
@@ -25,10 +27,20 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser())
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+    next();
+  });
+
 //Routes
 app.use('/', addUser);
 app.use('/', loginUser);
-app.use('/', changePassword)
+app.use('/', changePassword);
+app.use('/', bookins);
+app.use('/', handleLogout);
 
 app.listen(process.env.PORT, () => {
     console.log(`Escuchando por el puerto ${process.env.PORT}`);
