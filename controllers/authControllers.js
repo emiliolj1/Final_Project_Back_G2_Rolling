@@ -58,7 +58,7 @@ const loginUser =  async (request, response) => {
     })
     response.status(200).json({ accessToken, message: 'Succesfull User Logged'})
   } catch (error) {
-    response.status(500).json({ message: error.message })
+    response.status(500).json({ message: error.message})
   }
 };
 

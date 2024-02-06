@@ -2,7 +2,7 @@ const {model, Schema} = require('mongoose')
 
 const bookinSchema = new Schema ({
     Date: Date,
-    Time: Time,
+    Hora: String,
     email: String
 })
 
