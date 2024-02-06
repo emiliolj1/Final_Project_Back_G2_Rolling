@@ -1,9 +1,22 @@
-const { Route } = require('express')
-const route = Route()
-const { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteProducts, DeleteCanchas } = require('../controllers/adminController')
+const { Router } = require('express')
+const route = Router()
+const { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteProducts, DeleteCanchas, changeRole, DeleteUser } = require('../controllers/adminController')
 
-route.get('/admin/id', getAllUsers, getAllCancha, getAllProducts)
-// route.post('/admin', createProduct, createCancha)
-// route.delete('/admin', DeleteCanchas, DeleteProducts)
+//get all documents
+//route.get('/admin/getUsers', getAllUsers)
+route.get('/admin/getProducts', getAllProducts)
+// route.get('/admin/getCanchas', getAllCancha)
+
+// Create all products and cancha
+route.post('/admin/createProduct', createProduct)
+// route.post('/admin/createCancha', createCancha)
+
+// Path all products canchas and users
+// route.post('/admin/changeRole', changeRole)
+
+// Delete al products and canchas
+// route.delete('/admin/deleteProduct', DeleteProducts)
+// route.delete('/admin/deleteCancha', DeleteCanchas)
+// route.delete('/admin/deleteUser', DeleteUser)
 
 module.exports = route

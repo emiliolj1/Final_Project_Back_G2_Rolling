@@ -40,7 +40,7 @@ const changePassword = async (request, response) => {
     }
 
     // if the user exist, we compare the info with the data base
-    if(user.email === email || user.Name === Name){
+    if(user.email === email && user.Name === Name){
       //then encrypt the new password and save it
       const saltRounds = 10;
       const salt = bcrypt.genSaltSync(saltRounds);
