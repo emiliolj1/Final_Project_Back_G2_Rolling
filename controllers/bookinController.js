@@ -1,59 +1,49 @@
 require('dotenv').config();
 const { response, request } = require('express');
-const { bookin } = require('../models/bookinModel');
-const { Cancha } = require('../models/canchaModel');
-const { User } = require('../models/userModel');
+const { Cancha } = require('../models/canchaModel')
+const { DateTime } = require("luxon");
 
-
-//no anda
+//...
 const bookins = async (request, response) => {
-    const {Date, Hora, Email, id} = request.body
+    const {date, time, name} = request.body
     try {
-        const booking = await bookin.findOne({Date, Hora})
-        const cancha = await Cancha.findOne({_id: id})
-        const user = await User.findOne({email : Email})
-        if(booking){
-            return response.status(400).json({message:'ya existe una reserva en esa hora'})
-        }
-        if (!cancha) {
-            return response.status(404).json({ message: 'La cancha especificada no existe' });
-        }
-        if (!user) {
-            return response.status(404).json({ message: 'El usuario especificado no existe' });
-        }
-        if(!booking && cancha.id === id && user.email === Email){
-            const reserve = new bookin({
-                Date,
-                Hora,
-                Email
-            })
-            await reserve.save();
-            response.status(200).json({message:'se realizo la reserva con exito'})
-        } 
+        let dateString = date
+        let timeString = time 
+        let concat = dateString + 'T' + timeString
+        let DateISO = new Date(concat)
+        console.log(DateISO)
+        const newBookin = new Cancha ({
+            Array:[{ date: DateISO, name: name}]
+        })
+        await newBookin.save()
+        response.status(200).json({message:'se realizo la reserva con exito'})
     } catch (error) {
         response.status(400).json({message:'no se pudo hacer la reserva'});
     }
 }
 
 
-const getAllBookin = async () => {
+const getAllBookin = async (request, response) => {
     try {
-        const bookins = await bookin.find({});
-        response.status(200).json(bookins);
+        const { date, name } = request.body
+        if(!date && !name){
+            return response.status(400).json({ message: 'Se requiere la fecha para realizar la búsqueda' });
+        }
+        const cancha = await Cancha.find({Array:{$elemMatch:{date: date, name: name}}})
+        if (cancha.length === 0) {
+            return response.status(404).json({ message: 'No se encontraron reservas para la fecha especificada' });
+        }
+        response.status(200).json(cancha);
     } catch (error) {
         response.status(500).json({message:'no se pudo realizar la accion, disculpe las molestias'});
     }
 }
 
-//no anda
+//...
 const checkTime = async (request, response) => {
     try {
-        const bookins = await bookin.find({})
-        let bookinparserDate = bookin.Date.parse()
-        let bookinparserHour = bookin.Hour.parse()
-        let timestamp =  Date.now()
-
-        response.json({ message: 'Reservas eliminadas con éxito' });
+        const bookin = await Cancha.find({Date})
+        
     } catch (error) {
         response.status(500).json({message:'no se pudo realizar el borrado automatico'})
     }
@@ -63,12 +53,8 @@ const checkTime = async (request, response) => {
 const deleteBookin = async (request, response) => {
     const { id } = request.body
     try {
-        const bookins = await bookin.findOne({_id:id})
-        if(!bookins){
-            return response.status(400).json({message:'no existe la reserva'})
-        }
-
-        await bookin.deleteOne({_id: id})
+        
+        
         response.status(200).json({message:'se pudo eliminar con exito'})
     } catch (error) {
         response.status(400).json({message:'no se pudo realizar la accion'})

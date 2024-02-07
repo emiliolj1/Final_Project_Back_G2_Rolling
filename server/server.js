@@ -23,7 +23,7 @@ const getAllBookins = require('../router/bookinRoutes');
 const DeleteProduct = require('../router/adminRoute');//delete controllers
 const DeleteCancha = require('../router/adminRoute');
 const DeleteUser = require('../router/adminRoute');
-const deleteBookin = require('../router/bookinRoutes');
+//const deleteBookin = require('../router/bookinRoutes');
 
 const changePassword = require('../router/userRoute');
 const changeRole = require('../router/adminRoute');//path controllers
@@ -56,7 +56,7 @@ app.use('/', getAllBookins);
 app.use('/', DeleteCancha); // delete's
 app.use('/', DeleteProduct);
 app.use('/', DeleteUser);
-app.use('/', deleteBookin);
+//app.use('/', deleteBookin);
 
 
 app.listen(process.env.PORT, () => {
