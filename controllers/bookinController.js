@@ -14,16 +14,10 @@ const bookins = async (request, response) => {
         let DateISO = new Date(concat)
         console.log(DateISO);
         let canchas = await Cancha.findOne({Title : nombre})
-        //const [Title] = canchas
+
         if(canchas.Title === nombre){
             
             canchas.Array.push({ date: DateISO, name: name })
-            // const newBookin = new Cancha ({
-            //     Title,
-            //     Url,
-            //     description,
-            //     Array:[{ date: DateISO, name: name }]
-            // })
             await canchas.save()
             response.status(200).json({message:'se realizo la reserva con exito'})
         }else {
