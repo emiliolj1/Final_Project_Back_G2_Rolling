@@ -27,21 +27,19 @@ const DeleteUser = require('../router/adminRoute');
 
 const changePassword = require('../router/userRoute');
 const changeRole = require('../router/adminRoute');//path controllers
-const sendEmail = require('../router/userRoute');
 
 //Middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(credentials);
-app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cors(corsOptions));
 app.use(cookieParser())
 
 
 //Routes
 app.use('/', addUser);
 app.use('/', loginUser);
-app.use('/', sendEmail);
 
 app.use('/', changePassword); //paths
 app.use('/', changeRole)
