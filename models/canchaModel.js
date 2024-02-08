@@ -1,7 +1,7 @@
 const {model, Schema} = require('mongoose')
 
 const canchaSchema = new Schema ({
-  Title: {type: String, unique: true},
+  Title: String,
   Url: String,
   description: String,
   Array: [{
