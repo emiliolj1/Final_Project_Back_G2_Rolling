@@ -82,17 +82,18 @@ const getAllUsers = async(request, response) => {
   }
 };
 
-const UserDisable = async (request, response) => {
-  const {id} = request.body
-  try {
-    const users = await User.findOne({_id: id})
-    if(!users){
-      return response.status(400).json({message:'no se encontro al usuario'})
-    }
-  } catch (error) {
+//inProgress
+// const UserDisable = async (request, response) => {
+//   const {id} = request.body
+//   try {
+//     const users = await User.findOne({_id: id})
+//     if(!users){
+//       return response.status(400).json({message:'no se encontro al usuario'})
+//     }
+//   } catch (error) {
 
-  }
-};
+//   }
+// };
 
 const changeRole = async(request, response) => {
   const {id, newRole} = request.body
