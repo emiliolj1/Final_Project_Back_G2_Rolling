@@ -6,7 +6,7 @@ route.get('/getBookins', getAllBookin)
 
 route.post('/reserva', bookins);
 
-route.delete('/checktime', checkTime)
-route.delete('/deleteBookin', deleteBookin)
+//route.delete('/checktime', checkTime)
+//route.delete('/deleteBookin', deleteBookin)
 
 module.exports = route;
