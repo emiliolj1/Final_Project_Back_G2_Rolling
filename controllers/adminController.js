@@ -113,7 +113,7 @@ const changeRole = async(request, response) => {
 }
 
 const DeleteUser = async (request, response) => {
-  const {id} = request.body;
+  const { id } = request.params;
   try {
     const user = await User.findOne({_id: id});
     if(!user){
@@ -129,8 +129,8 @@ const DeleteUser = async (request, response) => {
 }
 
 const DeleteProducts = async (request, response) => {
-  //we use an input where the user can write a number
-  const { id } = request.body;
+  //we use the id from the mongoDB
+  const { id } = request.params;
   try {
     // the number from the front is a id, then use these id to find the product in the data base
     const product = await Product.findOne({_id: id});
@@ -149,8 +149,8 @@ const DeleteProducts = async (request, response) => {
 };
 
 const DeleteCanchas = async (request, response) => {
-  //we use an input where the user can write a number
-  const { id } = request.body
+  //we use the id from the mongoDB
+  const { id } = request.params;
   try {
     // the number from the front is a id, then use these id to find the cancha in the data base
     const canchas = await Cancha.findOne({_id: id})

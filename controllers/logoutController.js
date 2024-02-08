@@ -1,8 +1,8 @@
-const User = require('../models/userModel')
+const { User } = require('../models/userModel')
 
 const handleLogout = async ( request, response ) => {
     try {
-        const cookies = request.cookies;
+        const cookies = request.params;
         if(!cookies?.refreshToken){
             return response.status(200).json({message: 'cookies no presentes'})
         }
