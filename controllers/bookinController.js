@@ -14,16 +14,10 @@ const bookins = async (request, response) => {
         let DateISO = new Date(concat)
         console.log(DateISO);
         let canchas = await Cancha.findOne({Title : nombre})
-        //const [Title] = canchas
+
         if(canchas.Title === nombre){
             
             canchas.Array.push({ date: DateISO, name: name })
-            // const newBookin = new Cancha ({
-            //     Title,
-            //     Url,
-            //     description,
-            //     Array:[{ date: DateISO, name: name }]
-            // })
             await canchas.save()
             response.status(200).json({message:'se realizo la reserva con exito'})
         }else {
@@ -34,10 +28,10 @@ const bookins = async (request, response) => {
     }
 }
 
-//...
+//anda
 const getAllBookin = async (request, response) => {
     try {
-        const cancha = await Cancha.find({Array})
+        const cancha = await Cancha.find()
         if (cancha.length === 0) {
             return response.status(404).json({ message: 'No se encontraron reservas' });
         }
@@ -50,19 +44,37 @@ const getAllBookin = async (request, response) => {
 //...
 const checkTime = async (request, response) => {
     try {
-        const bookin = await Cancha.find({Array: {$all: date}})
+        const canchas = await Cancha.find();
         
-        let arrayfromback = bookin
-        let [date] = arrayfromback;
-        let dateBack = new Date (date.parse())
-        let now = new Date()
-        if(!arrayfromback){
-            return response.status(400).json({message: 'No se encontraron reservas'})
-        }
-        if(dateBack < now){
-            await Cancha.deleteOne({Array})
-            response.status(200).json({})
-        }
+        // for (const cancha of canchas) {
+        //     const arrayFromBack = cancha.Array;
+
+        //     for (const fecha of arrayFromBack) {
+
+        //         const dateBack = new Date(fecha);
+
+        //         const now = new Date();
+
+        //         if (dateBack < now) {
+        //             await Cancha.updateOne({ _id: cancha._id }, { $set: { Array: [] } });
+        //         }
+        //     }
+        // }
+
+        // const bookin = await Cancha.find({Array: {$all: date}})
+        // console.log(bookin)
+        // let arrayfromback = bookin
+        // let [date] = arrayfromback;
+        // let dateBack = new Date (date.parse())
+        // let now = new Date()
+        // if(!arrayfromback){
+        //     return response.status(400).json({message: 'No se encontraron reservas'})
+        // }
+        // if(dateBack < now){
+        //     await Cancha.deleteOne({Array})
+        //     response.status(200).json({})
+        // }
+        response.status(200).json({ message: 'Proceso de verificación completado' });
     } catch (error) {
         response.status(500).json({message:'no se pudo realizar la accion, disculpe las molestias'})
     }
