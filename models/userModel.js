@@ -1,11 +1,12 @@
 const {model, Schema} = require('mongoose')
 
 const user =  new Schema({
-  Name: String,
-  email: {type: String, unique: true, require: true},
-  password: {type: String, require: true}, 
-  role: {type: String, enum:['client', 'admin'], default:'client'},
-  refreshToken: String
+  Name: {type: String, unique: true, require: true, minlength: 5, maxlength: 25},
+  Email: {type: String, unique: true, require: true, minlength: 5, maxlength: 25},
+  Password: {type: String, unique:true, require: true, minlength: 5, maxlength: 20}, 
+  Role: {type: String, enum:['client', 'admin'], default:'client'},
+  RefreshToken: String,
+  IsActive: true
 });
 
 

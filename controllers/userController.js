@@ -3,49 +3,49 @@ const { User } = require('../models/userModel');
 const bcrypt = require('bcrypt');
 
 
-const addUser = async (request, response) => {
+const addUser = async (req, res) => {
   try {
-    const { Name, email, password, role, refreshToken} = request.body
+    const { Name, Email, Password, Role, RefreshToken} = req.body
     const newUser = new User({
       Name,
-      email,
-      password,
-      role,
-      refreshToken
+      Email,
+      Password,
+      Role,
+      RefreshToken
     })
     // use the tool bcrypt to generate an encrypted password
     const saltRounds = 10;
     const salt = bcrypt.genSaltSync(saltRounds);
-    const hash = bcrypt.hashSync(password, salt);
+    const hash = bcrypt.hashSync(Password, salt);
     
-    newUser.password = hash
+    newUser.Password = hash
 
     await newUser.save()
-    response.status(200).json({ message: 'el usuario fue creado con exito' })
+    res.status(200).json({ message: 'el usuario fue creado con exito' })
   } catch (error) {
-    response.status(400).json({ message: 'no se pudo crear el usuario' }) 
+    res.status(400).json({ message: 'no se pudo realizar la accion de crear usuario, disculpe las molestias', error: error.message }) 
   }
 };
 
-const changePassword = async (request, response) => {
+const changePassword = async (req, res) => {
   try {
-    const { Name, email, newPassword } = request.body;
-    const user = await User.findOne({ Name, email })
+    const { Name, Email, newPassword } = req.body;
+    const user = await User.findOne({ Name, Email })
     
     if(!user){
       return response.status(400).json({message: 'usuario no existe'})
     }
 
-    if(user.email === email && user.Name === Name){
+    if(user.Email === Email && user.Name === Name){
       const saltRounds = 10;
       const salt = bcrypt.genSaltSync(saltRounds);
       const hash = bcrypt.hashSync(newPassword, salt);
-      user.password = hash
+      user.Password = hash
       await user.save()
     }
-    response.status(200).json({ message: 'el usuario cambio la contrasena con exito' })
+    res.status(200).json({ message: 'el usuario cambio la contrasena con exito' })
   } catch (error) {
-    response.status(400).json({ message: 'el usuario no pudo realizar la accion', error: error.message })
+    res.status(400).json({ message: 'el usuario no pudo realizar la accion', error: error.message })
   }
 }
 
