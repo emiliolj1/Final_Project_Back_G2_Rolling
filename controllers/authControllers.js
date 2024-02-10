@@ -4,28 +4,28 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config();
 
 
-const loginUser =  async (request, response) => {
+const loginUser =  async (req, res) => {
   try {
-    const {email, password} = request.body
+    const {email, password} = req.body
     
     const user = await User.findOne({ email })
     // searching for the user if it exists 
     if(!user){
-      return response.status(400).json({message: 'usuario no existe'})
+      return res.status(400).json({message: 'usuario no existe'})
     }
 
     // the user exist, their password is the same?
-    const isMatch = bcrypt.compareSync(password, user.password)
+    const isMatch = bcrypt.compareSync(password, user.Password)
     if(!isMatch){
-      return response.status(400).json({ message: 'contraseña invalida' })
+      return res.status(400).json({ message: 'contraseña invalida', error: error.message})
     }
 
     const accessToken = jwt.sign(
       { 
         id: user._id,
-        email: user.email,
+        email: user.Email,
         Name: user.Name,
-        role: user.role
+        role: user.Role
       }, 
       process.env.ACCESS_TOKEN_SECRET,
       {
@@ -36,9 +36,9 @@ const loginUser =  async (request, response) => {
     const refreshToken = jwt.sign(
       {
         id: user._id,
-        email: user.email,
+        email: user.Email,
         Name: user.Name,
-        role: user.role
+        role: user.Role
       },
       process.env.REFRESH_TOKEN_SECRET,
       {
@@ -47,7 +47,7 @@ const loginUser =  async (request, response) => {
     )
 
     // saving the refreshtoken in the user
-    user.refreshToken = refreshToken;
+    user.RefreshToken = refreshToken;
     await user.save()
 
     response.cookie('refreshToken', refreshToken, { 
@@ -56,9 +56,9 @@ const loginUser =  async (request, response) => {
       secure: true, 
       maxAge: 24 * 60 * 60 * 1000 
     })
-    response.status(200).json({ accessToken, message: 'Succesfull User Logged'})
+    res.status(200).json({ accessToken, message: 'Succesfull User Logged'})
   } catch (error) {
-    response.status(500).json({ message: error.message})
+    res.status(500).json({ message: 'no se pudo realizar la accion, disculpe las molestias', error: error.message})
   }
 };
 

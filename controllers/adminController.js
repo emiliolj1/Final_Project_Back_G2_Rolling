@@ -5,80 +5,80 @@ const { Product } = require('../models/productModel');
 const { Cancha } = require('../models/canchaModel')
 
 
-const createProduct = async (request, response) => {
-  const { Title, description, price, Url} = request.body
+const createProduct = async (req, res) => {
+  const { Title, Description, Price, Url} = req.body
   try {
-    const product = await Product.findOne({Title, description})
+    const product = await Product.findOne({Title, Description})
     if(product) {
-      return response.status(400).json({message: 'ya existe el producto'});
+      return res.status(400).json({message: 'ya existe el producto'});
     }
     if(!product){
       //we use the schema from the userModel
       const NewProduct = new Product ({
         Title,
-        description,
-        price,
+        Description,
+        Price,
         Url
       });
       //save the new product in the data base
       await NewProduct.save();
-      response.status(200).json({message: 'se creo con exito'});
+      res.status(200).json({message: 'se creo con exito'});
     }
   } catch (error) {
-    response.status(400).json({message: 'no se pudo crear.'});
+    res.status(500).json({message: 'no se pudo realizar la accion de crear productos, disculpe las molestias.', error: error.message});
   }
 };
 
-const getAllProducts = async (request, response) => {
+const getAllProducts = async (req, res) => {
   try {
     //we use find({}) to get all productos from the server
     const products = await Product.find({});
-    response.status(200).json(products);
+    res.status(200).json(products);
   } catch (error) {
-    response.status(500).json({ message: 'No se pudieron encontrar los productos' });
+    res.status(500).json({ message: 'no se pudo realizar la accion de obtener los productos, disculpe las molestias', error: error.message});
   }
 };
 
-const createCancha = async (request, response) => {
-  const { Title, description, Url} = request.body
+const createCancha = async (req, res) => {
+  const { Title, Description, Url} = req.body
   try {
-    const cancha = await Cancha.findOne({Title, description})
+    const cancha = await Cancha.findOne({Title, Description})
     if(cancha) {
-      return response.status(400).json({message: 'ya existe la cancha'});
+      return res.status(400).json({message: 'ya existe la cancha'});
     }
     if(!cancha) {
       //we use the schema from the canchaModel
       const NewCancha = new Cancha ({
         Title,
         Url,
-        description
+        Description
       });
       //then we save the new cancha
       await NewCancha.save();
-      response.status(200).json({message: 'se creo con exito'});
+      res.status(200).json({message: 'se creo con exito'});
     }
   } catch (error) {
-    response.status(400).json({message: 'no se pudo crear.'});
+    res.status(500).json({message: 'no se pudo realizar la accion de crear cancha, disculpe las molestias', error: error.message});
   }
 };
 
-const getAllCancha = async (request, response) => {
+const getAllCancha = async (req, res) => {
   try {
     // we use find({}) to get all from canchas in the data base
     const canchas = await Cancha.find({});
-    response.status(200).json(canchas);
+    res.status(200).json(canchas);
   } catch (error) {
-    response.status(500).json({ message: 'No se pudieron encontrar los productos' });
+    res.status(500).json({ message: 'No se pudieron encontrar los productos', error: error.message });
   }
 };
 
-const getAllUsers = async(request, response) => {
+const getAllUsers = async(req, res) => {
   try {
     // we use find({}) to get all from users in the data base
     const users = await User.find({});
-    response.status(200).json(users);
+    res.status(200).json(users);
   } catch (error) {
-    response.status(500).json({ message: 'No se pudieron encontrar usuarios' });
+    res.status(500).json({ message: 'No se pudieron encontrar usuarios, no se pudo realizar la accion, disculpe las molestias.', error: error.message });
   }
 };
 
@@ -95,76 +95,76 @@ const getAllUsers = async(request, response) => {
 //   }
 // };
 
-const changeRole = async(request, response) => {
-  const {id, newRole} = request.body
+const changeRole = async(req, res) => {
+  const {id, newRole} = req.body
   try {
     const user = await User.findOne({_id: id});
     if (!user) {
-      return response.status(404).json({ message: 'Usuario no encontrado' });
+      return res.status(404).json({ message: 'Usuario no encontrado' });
     }
     if(!['client','admin'].includes(newRole)){
-      response.status(400).json({message:'rol no valido'})
+      res.status(400).json({message:'rol no valido'})
     }
-    user.role = newRole;
+    user.Role = newRole;
     await user.save();
-    return response.status(200).json({ message: 'Se cambió el rol correctamente' });
+    return res.status(200).json({ message: 'Se cambió el rol correctamente' });
   } catch (error) {
-    response.status(500).json({message:'error en ejecutar la funcion'})
+    res.status(500).json({message:'error en ejecutar la funcion', error: error.message})
   }
 }
 
-const DeleteUser = async (request, response) => {
-  const { id } = request.params;
+const DeleteUser = async (req, res) => {
+  const { id } = req.params;
   try {
     const user = await User.findOne({_id: id});
     if(!user){
-      return response.status(400).json({message:'no se encontro el usuario'});
+      return res.status(404).json({message:'no se encontro el usuario'});
     }
     if(user){
       await User.deleteOne({_id:id})
     }
-    response.status(200).json({message:'se pudo eliminar el usuario'})
+    res.status(200).json({message:'se pudo eliminar el usuario'})
   } catch (error) {
-    response.status(400).json({message:'no se pudo realizar la accion'})
+    res.status(500).json({message:'no se pudo realizar la accion de borrar usuario, disculpe las molestias', error: error.message})
   }
 }
 
-const DeleteProducts = async (request, response) => {
+const DeleteProducts = async (req, res) => {
   //we use the id from the mongoDB
-  const { id } = request.params;
+  const { id } = req.params;
   try {
     // the number from the front is a id, then use these id to find the product in the data base
     const product = await Product.findOne({_id: id});
     // we check if the product exist
     if(!product){
-      return response.status(400).json({message: 'no existe el producto'})
+      return res.status(404).json({message: 'no existe el producto'})
     };
     // and if it exist we delete the product by id
     if(product){
       await Product.deleteOne({_id: id});
     }
-    response.status(200).json({message:'se pudo eliminar el producto'})
+    res.status(200).json({message:'se pudo eliminar el producto'})
   } catch (error) {
-    response.status(400).json({message: 'no se pudo realizar la accion'});
+    res.status(500).json({message: 'no se pudo realizar la accion de borrar los productos, disculpe las molestias', error: error.message});
   }
 };
 
-const DeleteCanchas = async (request, response) => {
+const DeleteCanchas = async (req, res) => {
   //we use the id from the mongoDB
-  const { id } = request.params;
+  const { id } = req.params;
   try {
     // the number from the front is a id, then use these id to find the cancha in the data base
     const canchas = await Cancha.findOne({_id: id})
     //we check if the cancha exist
     if(!canchas){
-      return response.status(400).json({message:'no existe la cancha'})
+      return res.status(404).json({message:'no existe la cancha'})
     }
     //if it exist we delete the cancha by id
     if(canchas){
       await Cancha.deleteOne({_id: id})
     }
   } catch (error) {
-    response.status(400).json({message: 'no se pudo realizar la accion'})
+    res.status(500).json({message: 'no se pudo realizar la accion de borrar canchas, disculpe las molestias', error: error.message})
   }
 }
 

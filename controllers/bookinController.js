@@ -4,8 +4,8 @@ const { Cancha } = require('../models/canchaModel')
 const { DateTime } = require("luxon");
 
 //...
-const bookins = async (request, response) => {
-    const {date, time, name, cancha} = request.body
+const bookins = async (req, res) => {
+    const {date, time, name, cancha} = req.body
     try {
         let nombre = cancha
         let dateString = date
@@ -19,30 +19,30 @@ const bookins = async (request, response) => {
             
             canchas.Array.push({ date: DateISO, name: name })
             await canchas.save()
-            response.status(200).json({message:'se realizo la reserva con exito'})
+            res.status(200).json({message:'se realizo la reserva con exito'})
         }else {
-            response.status(404).json({ message: 'No se encontró la cancha especificada' });
+            res.status(404).json({ message: 'No se encontró la cancha especificada' });
         }
     } catch (error) {
-        response.status(400).json({message:'no se pudo hacer la reserva'});
+        res.status(500).json({message:'no se pudo realizar la accion de reserva cancha, disculpe las molestias'});
     }
 }
 
 //anda
-const getAllBookin = async (request, response) => {
+const getAllBookin = async (req, res) => {
     try {
         const cancha = await Cancha.find()
         if (cancha.length === 0) {
-            return response.status(404).json({ message: 'No se encontraron reservas' });
+            return res.status(404).json({ message: 'No se encontraron reservas' });
         }
-        response.status(200).json(cancha);
+        res.status(200).json(cancha);
     } catch (error) {
-        response.status(500).json({message:'no se pudo realizar la accion, disculpe las molestias'});
+        res.status(500).json({message:'no se pudo realizar la accion, disculpe las molestias'});
     }
 }
 
 //...
-const checkTime = async (request, response) => {
+const checkTime = async (req, res) => {
     try {
         const canchas = await Cancha.find();
         
@@ -88,7 +88,7 @@ const deleteBookin = async (request, response) => {
         
         response.status(200).json({message:'se pudo eliminar con exito'})
     } catch (error) {
-        response.status(400).json({message:'no se pudo realizar la accion'})
+        response.status(500).json({message:'no se pudo realizar la accion, disculpe las molestias'})
     }
 }
 

@@ -1,30 +1,30 @@
 const { User } = require('../models/userModel')
 
-const handleLogout = async ( request, response ) => {
+const handleLogout = async ( req, res ) => {
     try {
-        const cookies = request.params;
+        const cookies = req.params;
         if(!cookies?.refreshToken){
-            return response.status(200).json({message: 'cookies no presentes'})
+            return res.status(200).json({message: 'cookies no presentes'})
         }
         const refreshToken = cookies.refreshToken;
 
         const user = await User.findOne({refreshToken})
         if(!user){
-            response.clearCookies('refreshToken', {
+            res.clearCookies('refreshToken', {
                 httpOnly: true, sameSite: 'None', secure: true
             })
             return response.status(200).json({message:'Cookies borradas'})
         }
 
-        user.refreshToken = '';
+        user.RefreshToken = '';
         await user.save()
 
-        response.clearCookies('refreshToken', {
+        res.clearCookies('refreshToken', {
             httpOnly: true, sameSite: 'None', secure: true
         })
-        response.status(200).json({message:'Usuario y cookies borradas'})
+        res.status(200).json({message:'Usuario y cookies borradas'})
     } catch (error) {
-      response.status(500).json({message:'todo mal loco'})
+      res.status(500).json({message:''})
     }
 }
 
