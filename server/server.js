@@ -14,6 +14,7 @@ const createCancha = require('../router/adminRoute');
 const creatBookin = require('../router/bookinRoutes');
 const addUser = require('../router/userRoute');
 const loginUser = require('../router/authRoutes');
+const logOut = require('../router/logoutRoutes')
 
 const getAllUsers = require('../router/userRoute');//get controllers
 const getAllProducts = require('../router/adminRoute');
@@ -40,6 +41,7 @@ app.use(cookieParser())
 //Routes
 app.use('/', addUser);
 app.use('/', loginUser);
+app.use('/',logOut)
 
 app.use('/', changePassword); //paths
 app.use('/', changeRole)
