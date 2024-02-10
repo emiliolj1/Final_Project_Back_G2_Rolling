@@ -29,7 +29,7 @@ const loginUser =  async (request, response) => {
       }, 
       process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: '120s'
+        expiresIn: '300s'
       }
     )
 
@@ -58,7 +58,7 @@ const loginUser =  async (request, response) => {
     })
     response.status(200).json({ accessToken, message: 'Succesfull User Logged'})
   } catch (error) {
-    response.status(500).json({ message: error.message })
+    response.status(500).json({ message: error.message})
   }
 };
 

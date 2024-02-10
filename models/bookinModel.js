@@ -1,9 +1,10 @@
-const {model, Schema} = require('mongoose')
+// const {model, Schema} = require('mongoose')
 
-const bookinSchema = new Schema ({
-    Date: Date,
-    Time: Time,
-    email: String
-})
+// const bookinSchema = new Schema ({
+//     Date: String,
+//     Hora: String,
+//     Email: String
+// })
 
-module.exports = model ('bookin', bookinSchema)
+// const bookin = model('bookin', bookinSchema)
+// module.exports = { bookin }

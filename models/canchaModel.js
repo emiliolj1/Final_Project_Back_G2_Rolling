@@ -2,10 +2,13 @@ const {model, Schema} = require('mongoose')
 
 const canchaSchema = new Schema ({
   Title: String,
-  id: id,
-  img: Image,
+  Url: String,
   description: String,
-  Date: Date,
+  Array: [{
+    date: { type: String },
+    name: { type: String }
+  }]
 })
 
-module.exports = model('cancha', canchaSchema)
+const Cancha = model('cancha', canchaSchema)
+module.exports = {Cancha}

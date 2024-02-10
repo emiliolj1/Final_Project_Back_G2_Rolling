@@ -27,21 +27,16 @@ const addUser = async (request, response) => {
   }
 };
 
-// en desarrollo
-
 const changePassword = async (request, response) => {
   try {
-    const { Name, email, newPassword } = request.body
+    const { Name, email, newPassword } = request.body;
     const user = await User.findOne({ Name, email })
-
-    // searching for the user if it exists 
+    
     if(!user){
       return response.status(400).json({message: 'usuario no existe'})
     }
 
-    // if the user exist, we compare the info with the data base
-    if(user.email === email || user.Name === Name){
-      //then encrypt the new password and save it
+    if(user.email === email && user.Name === Name){
       const saltRounds = 10;
       const salt = bcrypt.genSaltSync(saltRounds);
       const hash = bcrypt.hashSync(newPassword, salt);

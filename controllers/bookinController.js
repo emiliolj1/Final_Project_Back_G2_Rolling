@@ -1,77 +1,91 @@
 require('dotenv').config();
 const { response, request } = require('express');
-const bookin = require('../models/bookinModel')
+const { Cancha } = require('../models/canchaModel')
+const { DateTime } = require("luxon");
 
-
-
+//...
 const bookins = async (request, response) => {
-    const {Date, Time, email} = request.body;
+    const {date, time, name, cancha} = request.body
     try {
-        //first check if we already have a booking in the same date and time
-        const bookin = await bookin.findOne({Date, Time});
-        // if it exist we return an error
-        if(bookin){
-            return response.status(400).json({message:'ya hay una reserva en el horario'})
-        };
-        // if doestn exist we creat a new one in the date and time and then we save it the data base
-        if(!bookin){
-            const reserve = new bookin ({
-                Date,
-                Time,
-                email
-            });
-            await reserve.save();
+        let nombre = cancha
+        let dateString = date
+        let timeString = time 
+        let concat = dateString + 'T' + timeString
+        let DateISO = new Date(concat)
+        console.log(DateISO);
+        let canchas = await Cancha.findOne({Title : nombre})
+
+        if(canchas.Title === nombre){
+            
+            canchas.Array.push({ date: DateISO, name: name })
+            await canchas.save()
             response.status(200).json({message:'se realizo la reserva con exito'})
+        }else {
+            response.status(404).json({ message: 'No se encontró la cancha especificada' });
         }
     } catch (error) {
         response.status(400).json({message:'no se pudo hacer la reserva'});
     }
 }
 
-const getAllBookin = async () => {
+//anda
+const getAllBookin = async (request, response) => {
     try {
-        const bookins = await bookin.find({});
-        response.status(200).json(bookins);
+        const cancha = await Cancha.find()
+        if (cancha.length === 0) {
+            return response.status(404).json({ message: 'No se encontraron reservas' });
+        }
+        response.status(200).json(cancha);
     } catch (error) {
         response.status(500).json({message:'no se pudo realizar la accion, disculpe las molestias'});
     }
 }
 
+//...
 const checkTime = async (request, response) => {
     try {
-        const bookings = await bookin.find({})
-        const now = new Date()
-        if(!time){
-            return response.status(400).json({message:'no existe el turno'});
-        }
+        const canchas = await Cancha.find();
+        
+        // for (const cancha of canchas) {
+        //     const arrayFromBack = cancha.Array;
 
-        for (const booking of bookings){
-            const bookinDateTime = new Date(`${bookin.Date}${bookin.Time}`)
-            if(bookinDateTime.getTime() < now.getTime()){
-                await bookin.deleteOne({_id: booking._id})
-            }
-        }
+        //     for (const fecha of arrayFromBack) {
 
-        // const filter = time.filter(booking => new Date(booking.Date).getTime() < Date.now() || new Date(booking.Time).getTime() < Date.now())
-        // filter.forEach(async booking => {
-        //     await bookin.deleteOne({_id: booking._id})
-        // })
+        //         const dateBack = new Date(fecha);
 
-        return response.json({ message: 'Reservas eliminadas con éxito' });
+        //         const now = new Date();
+
+        //         if (dateBack < now) {
+        //             await Cancha.updateOne({ _id: cancha._id }, { $set: { Array: [] } });
+        //         }
+        //     }
+        // }
+
+        // const bookin = await Cancha.find({Array: {$all: date}})
+        // console.log(bookin)
+        // let arrayfromback = bookin
+        // let [date] = arrayfromback;
+        // let dateBack = new Date (date.parse())
+        // let now = new Date()
+        // if(!arrayfromback){
+        //     return response.status(400).json({message: 'No se encontraron reservas'})
+        // }
+        // if(dateBack < now){
+        //     await Cancha.deleteOne({Array})
+        //     response.status(200).json({})
+        // }
+        response.status(200).json({ message: 'Proceso de verificación completado' });
     } catch (error) {
-        response.status(500).json({message:'no se pudo realizar el borrado automatico'})
+        response.status(500).json({message:'no se pudo realizar la accion, disculpe las molestias'})
     }
 }
 
-const deleteBookin = async (request, reponse) => {
+//...
+const deleteBookin = async (request, response) => {
     const { id } = request.body
     try {
-        const bookin = await bookin.findOne({_id:id})
-        if(!bookin){
-            return response.status(400).json({message:'no existe la reserva'})
-        }
-
-        await bookin.deleteOne({_id: id})
+        
+        
         response.status(200).json({message:'se pudo eliminar con exito'})
     } catch (error) {
         response.status(400).json({message:'no se pudo realizar la accion'})
