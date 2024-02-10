@@ -5,13 +5,19 @@ const { Product } = require('../models/productModel');
 const { Cancha } = require('../models/canchaModel')
 
 
+
+// Zone of products
+
 const createProduct = async (req, res) => {
+  //we request from the front the title description price and url of a img
   const { Title, Description, Price, Url} = req.body
   try {
+    //we find a product with title and description
     const product = await Product.findOne({Title, Description})
+    //if it existe we return a response 400
     if(product) {
       return res.status(400).json({message: 'ya existe el producto'});
-    }
+    };
     if(!product){
       //we use the schema from the userModel
       const NewProduct = new Product ({
@@ -26,7 +32,7 @@ const createProduct = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de crear productos, disculpe las molestias.', error: error.message});
-  }
+  };
 };
 
 const getAllProducts = async (req, res) => {
@@ -36,7 +42,7 @@ const getAllProducts = async (req, res) => {
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: 'no se pudo realizar la accion de obtener los productos, disculpe las molestias', error: error.message});
-  }
+  };
 };
 
 const DeleteProducts = async (req, res) => {
@@ -52,20 +58,28 @@ const DeleteProducts = async (req, res) => {
     // and if it exist we delete the product by id
     if(product){
       await Product.deleteOne({_id: id});
-    }
-    res.status(200).json({message:'se pudo eliminar el producto'})
+      await Product.save();
+      res.status(200).json({message:'se pudo eliminar el producto'});
+    };
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de borrar los productos, disculpe las molestias', error: error.message});
   }
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Zone of canchas
+
 const createCancha = async (req, res) => {
+  //we request from the front the title description and url of a img
   const { Title, Description, Url} = req.body
   try {
-    const cancha = await Cancha.findOne({Title, Description})
+    //we find a product with title and description
+    const cancha = await Cancha.findOne({Title, Description});
+    //if it existe we return a response 400
     if(cancha) {
       return res.status(400).json({message: 'ya existe la cancha'});
-    }
+    };
     if(!cancha) {
       //we use the schema from the canchaModel
       const NewCancha = new Cancha ({
@@ -105,11 +119,16 @@ const DeleteCanchas = async (req, res) => {
     //if it exist we delete the cancha by id
     if(canchas){
       await Cancha.deleteOne({_id: id})
-    }
+      await Cancha.save();
+    };
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de borrar canchas, disculpe las molestias', error: error.message})
   }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Zone of users
 
 const getAllUsers = async(req, res) => {
   try {
@@ -122,30 +141,43 @@ const getAllUsers = async(req, res) => {
 };
 
 //inProgress
-// const UserDisable = async (request, response) => {
-//   const {id} = request.body
-//   try {
-//     const users = await User.findOne({_id: id})
-//     if(!users){
-//       return response.status(400).json({message:'no se encontro al usuario'})
-//     }
-//   } catch (error) {
-
-//   }
-// };
+const UserDisable = async (request, response) => {
+  //we use the id from the mongoDB
+  const { id } = request.body
+  try {
+    const users = await User.findOne({_id: id})
+    if(!users){
+      return response.status(400).json({message:'no se encontro al usuario'})
+    };
+    if(!users.IsActive){
+      return response.status(400).json({message:'no se encontro al usuario'})
+    };
+    users.IsActive = false;
+    await User.save();
+  } catch (error) {
+    res.status(500).json({ message: 'No se pudieron encontrar usuarios, no se pudo realizar la accion, disculpe las molestias.', error: error.message });
+  }
+};
 
 const changeRole = async(req, res) => {
-  const {id, newRole} = req.body
+  //we request from the front the id and the role
+  const {id, Role} = req.body
   try {
     const user = await User.findOne({_id: id});
+    //if it doesnt exist we return a response 404
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
+    };
+    //if it exist we check the role (Master)
+    if(Role === 'Master' && user.Role === 'Master'){
+      return res.status(400).json({message: 'no puedes cambiar tu rol Master a admin o a cliente'})
     }
-    if(!['client','admin'].includes(newRole)){
+    //and if the role doesnt include client or admin we return and response 400
+    if(!['client','admin'].includes(Role)){
       res.status(400).json({message:'rol no valido'})
-    }
+    };
     user.Role = newRole;
-    await user.save();
+    await User.save();
     return res.status(200).json({ message: 'Se cambió el rol correctamente' });
   } catch (error) {
     res.status(500).json({message:'error en ejecutar la funcion', error: error.message})
@@ -153,16 +185,20 @@ const changeRole = async(req, res) => {
 }
 
 const DeleteUser = async (req, res) => {
+ //we use the id from the mongoDB
   const { id } = req.params;
   try {
     const user = await User.findOne({_id: id});
+    //if it doesnt exist we return a response 404
     if(!user){
       return res.status(404).json({message:'no se encontro el usuario'});
-    }
+    };
+    //if it exist we delete the user by id
     if(user){
       await User.deleteOne({_id:id})
-    }
-    res.status(200).json({message:'se pudo eliminar el usuario'})
+      await User.save()
+      res.status(200).json({message:'se pudo eliminar el usuario'})
+    };
   } catch (error) {
     res.status(500).json({message:'no se pudo realizar la accion de borrar usuario, disculpe las molestias', error: error.message})
   }

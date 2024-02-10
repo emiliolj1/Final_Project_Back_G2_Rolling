@@ -20,9 +20,9 @@ const handleRefreshToken = async (req, res) => {
             process.env.REFRES_TOKEN_SECRETE,
             (error, decode) => {
                 const accessToken = jwt.sign({
-                    email: decode.email,
+                    email: decode.Email,
                     Name: decode.Name,
-                    role: decode.role
+                    role: decode.Role
                 }, process.env.ACCESS_TOKEN_SECRETE, {expiresIn: '3600'})
                 res.json({accessToken})
             }
