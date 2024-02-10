@@ -5,6 +5,9 @@ const { Product } = require('../models/productModel');
 const { Cancha } = require('../models/canchaModel')
 
 
+
+// Zone of products
+
 const createProduct = async (req, res) => {
   //we request from the front the title description price and url of a img
   const { Title, Description, Price, Url} = req.body
@@ -63,6 +66,10 @@ const DeleteProducts = async (req, res) => {
   }
 };
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Zone of canchas
+
 const createCancha = async (req, res) => {
   //we request from the front the title description and url of a img
   const { Title, Description, Url} = req.body
@@ -118,6 +125,10 @@ const DeleteCanchas = async (req, res) => {
     res.status(500).json({message: 'no se pudo realizar la accion de borrar canchas, disculpe las molestias', error: error.message})
   }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Zone of users
 
 const getAllUsers = async(req, res) => {
   try {
