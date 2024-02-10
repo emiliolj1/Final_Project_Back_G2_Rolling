@@ -39,6 +39,26 @@ const getAllProducts = async (req, res) => {
   }
 };
 
+const DeleteProducts = async (req, res) => {
+  //we use the id from the mongoDB
+  const { id } = req.params;
+  try {
+    // the number from the front is a id, then use these id to find the product in the data base
+    const product = await Product.findOne({_id: id});
+    // we check if the product exist
+    if(!product){
+      return res.status(404).json({message: 'no existe el producto'})
+    };
+    // and if it exist we delete the product by id
+    if(product){
+      await Product.deleteOne({_id: id});
+    }
+    res.status(200).json({message:'se pudo eliminar el producto'})
+  } catch (error) {
+    res.status(500).json({message: 'no se pudo realizar la accion de borrar los productos, disculpe las molestias', error: error.message});
+  }
+};
+
 const createCancha = async (req, res) => {
   const { Title, Description, Url} = req.body
   try {
@@ -71,6 +91,25 @@ const getAllCancha = async (req, res) => {
     res.status(500).json({ message: 'No se pudieron encontrar los productos', error: error.message });
   }
 };
+
+const DeleteCanchas = async (req, res) => {
+  //we use the id from the mongoDB
+  const { id } = req.params;
+  try {
+    // the number from the front is a id, then use these id to find the cancha in the data base
+    const canchas = await Cancha.findOne({_id: id})
+    //we check if the cancha exist
+    if(!canchas){
+      return res.status(404).json({message:'no existe la cancha'})
+    }
+    //if it exist we delete the cancha by id
+    if(canchas){
+      await Cancha.deleteOne({_id: id})
+    }
+  } catch (error) {
+    res.status(500).json({message: 'no se pudo realizar la accion de borrar canchas, disculpe las molestias', error: error.message})
+  }
+}
 
 const getAllUsers = async(req, res) => {
   try {
@@ -129,43 +168,6 @@ const DeleteUser = async (req, res) => {
   }
 }
 
-const DeleteProducts = async (req, res) => {
-  //we use the id from the mongoDB
-  const { id } = req.params;
-  try {
-    // the number from the front is a id, then use these id to find the product in the data base
-    const product = await Product.findOne({_id: id});
-    // we check if the product exist
-    if(!product){
-      return res.status(404).json({message: 'no existe el producto'})
-    };
-    // and if it exist we delete the product by id
-    if(product){
-      await Product.deleteOne({_id: id});
-    }
-    res.status(200).json({message:'se pudo eliminar el producto'})
-  } catch (error) {
-    res.status(500).json({message: 'no se pudo realizar la accion de borrar los productos, disculpe las molestias', error: error.message});
-  }
-};
 
-const DeleteCanchas = async (req, res) => {
-  //we use the id from the mongoDB
-  const { id } = req.params;
-  try {
-    // the number from the front is a id, then use these id to find the cancha in the data base
-    const canchas = await Cancha.findOne({_id: id})
-    //we check if the cancha exist
-    if(!canchas){
-      return res.status(404).json({message:'no existe la cancha'})
-    }
-    //if it exist we delete the cancha by id
-    if(canchas){
-      await Cancha.deleteOne({_id: id})
-    }
-  } catch (error) {
-    res.status(500).json({message: 'no se pudo realizar la accion de borrar canchas, disculpe las molestias', error: error.message})
-  }
-}
 
 module.exports = { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteCanchas, DeleteProducts, DeleteUser, changeRole }
