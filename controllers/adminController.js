@@ -34,6 +34,25 @@ const getAllProducts = async () => {
   }
 };
 
+const DeleteProducts = async (request, response) => {
+  //we use an input where the user can write a number
+  const { id } = request.body;
+  try {
+    // the number from the front is a id, then use these id to find the product in the data base
+    const product = await Products.findOne({_id: id});
+    // we check if the product exist
+    if(!product){
+      return response.status(400).json({message: 'no existe el producto'})
+    };
+    // and if it exist we delete the product by id
+    await Products.deleteOne({_id: id});
+
+  } catch (error) {
+    response.status(400).json({message: 'no se pudo realizar la accion'});
+  }
+};
+
+
 const createCancha = async () => {
   const { Title, description, id, img, Date} = request.body
   try {
@@ -60,6 +79,23 @@ const getAllCancha = async () => {
     response.status(200).json(canchas);
   } catch (error) {
     response.status(500).json({ message: 'No se pudieron encontrar los productos' });
+  }
+};
+
+const DeleteCanchas = async (request, response) => {
+  //we use an input where the user can write a number
+  const { id } = request.body
+  try {
+    // the number from the front is a id, then use these id to find the cancha in the data base
+    const canchas = await Cancha.findOne({_id: id})
+    //we check if the cancha exist
+    if(!canchas){
+      return response.status(400).json({message:'no existe la cancha'})
+    }
+    //if it exist we delete the cancha by id
+    await Cancha.deleteOne({_id: id})
+  } catch (error) {
+    response.status(400).json({message: 'no se pudo realizar la accion'})
   }
 };
 
@@ -97,12 +133,12 @@ const changeRole = async(request, response) => {
     }
     if([client, admin].includes(newRole)){
       await User.save()
-      response.status(200).json({message:'se pudo cambiar el rol con exito'})
+      response.status(200).json({message:'se pudo cambiar el rol con exito'});
     }
   } catch (error) {
-    response.status(500).json({message:'error en ejecutar la funcion'})
+    response.status(500).json({message:'error en ejecutar la funcion'});
   }
-}
+};
 
 const DeleteUser = async (request, response) => {
   const {id} = request.body;
@@ -119,39 +155,6 @@ const DeleteUser = async (request, response) => {
   }
 }
 
-const DeleteProducts = async (request, response) => {
-  //we use an input where the user can write a number
-  const { id } = request.body;
-  try {
-    // the number from the front is a id, then use these id to find the product in the data base
-    const product = await Products.findOne({_id: id});
-    // we check if the product exist
-    if(!product){
-      return response.status(400).json({message: 'no existe el producto'})
-    };
-    // and if it exist we delete the product by id
-    await Products.deleteOne({_id: id});
 
-  } catch (error) {
-    response.status(400).json({message: 'no se pudo realizar la accion'});
-  }
-};
 
-const DeleteCanchas = async (request, response) => {
-  //we use an input where the user can write a number
-  const { id } = request.body
-  try {
-    // the number from the front is a id, then use these id to find the cancha in the data base
-    const canchas = await Cancha.findOne({_id: id})
-    //we check if the cancha exist
-    if(!canchas){
-      return response.status(400).json({message:'no existe la cancha'})
-    }
-    //if it exist we delete the cancha by id
-    await Cancha.deleteOne({_id: id})
-  } catch (error) {
-    response.status(400).json({message: 'no se pudo realizar la accion'})
-  }
-}
-
-module.exports = { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteCanchas, DeleteProducts, DeleteUser}
+module.exports = { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteCanchas, DeleteProducts, DeleteUser, changeRole}
