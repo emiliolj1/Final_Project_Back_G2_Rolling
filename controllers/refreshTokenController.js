@@ -2,17 +2,17 @@ const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const handleRefreshToken = async (request, response) => {
+const handleRefreshToken = async (req, res) => {
     try {
-        const cookies = request.cookies;
+        const cookies = req.cookies;
         if(!cookies?.refresToken){
-            return response.status(401).json({message:'no permitido'})
+            return res.status(401).json({message:'no permitido'})
         }
         const refreshToken = cookies.refresToken;
 
         const user =  await User.findOne({ refreshToken })
         if(!user){
-            return response.status(403).json({message:'no permitido'})
+            return res.status(403).json({message:'no permitido'})
         }
 
         jwt.verify(
@@ -20,15 +20,15 @@ const handleRefreshToken = async (request, response) => {
             process.env.REFRES_TOKEN_SECRETE,
             (error, decode) => {
                 const accessToken = jwt.sign({
-                    email: decode.email,
+                    email: decode.Email,
                     Name: decode.Name,
-                    role: decode.role
+                    role: decode.Role
                 }, process.env.ACCESS_TOKEN_SECRETE, {expiresIn: '3600'})
-                response.json({accessToken})
+                res.json({accessToken})
             }
         )
     } catch (error) {
-        response.status(500).json(error)
+        res.status(500).json(error)
     }
 }
 
