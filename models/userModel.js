@@ -4,7 +4,7 @@ const user =  new Schema({
   Name: {type: String, unique: true, require: true, minlength: 5, maxlength: 25},
   Email: {type: String, unique: true, require: true, minlength: 5, maxlength: 25},
   Password: {type: String, unique:true, require: true, minlength: 5, maxlength: 20}, 
-  Role: {type: String, enum:['client', 'admin'], default:'client'},
+  Role: {type: String, enum:['client', 'admin', 'Master'], default:'client'},
   RefreshToken: String,
   IsActive: true
 });

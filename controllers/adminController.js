@@ -6,12 +6,15 @@ const { Cancha } = require('../models/canchaModel')
 
 
 const createProduct = async (req, res) => {
+  //we request from the front the title description price and url of a img
   const { Title, Description, Price, Url} = req.body
   try {
+    //we find a product with title and description
     const product = await Product.findOne({Title, Description})
+    //if it existe we return a response 400
     if(product) {
       return res.status(400).json({message: 'ya existe el producto'});
-    }
+    };
     if(!product){
       //we use the schema from the userModel
       const NewProduct = new Product ({
@@ -26,7 +29,7 @@ const createProduct = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de crear productos, disculpe las molestias.', error: error.message});
-  }
+  };
 };
 
 const getAllProducts = async (req, res) => {
@@ -36,36 +39,12 @@ const getAllProducts = async (req, res) => {
     res.status(200).json(products);
   } catch (error) {
     res.status(500).json({ message: 'no se pudo realizar la accion de obtener los productos, disculpe las molestias', error: error.message});
-  }
+  };
 };
 
-<<<<<<< HEAD
-const DeleteProducts = async (request, response) => {
-  //we use an input where the user can write a number
-  const { id } = request.body;
-  try {
-    // the number from the front is a id, then use these id to find the product in the data base
-    const product = await Products.findOne({_id: id});
-    // we check if the product exist
-    if(!product){
-      return response.status(400).json({message: 'no existe el producto'})
-    };
-    // and if it exist we delete the product by id
-    await Products.deleteOne({_id: id});
-
-  } catch (error) {
-    response.status(400).json({message: 'no se pudo realizar la accion'});
-  }
-};
-
-
-const createCancha = async (request, response) => {
-  const { Title, description, Url} = request.body
-=======
 const DeleteProducts = async (req, res) => {
   //we use the id from the mongoDB
   const { id } = req.params;
->>>>>>> e596bbb3683ad35308d8e982d9aba4cf384c98c7
   try {
     // the number from the front is a id, then use these id to find the product in the data base
     const product = await Product.findOne({_id: id});
@@ -76,20 +55,24 @@ const DeleteProducts = async (req, res) => {
     // and if it exist we delete the product by id
     if(product){
       await Product.deleteOne({_id: id});
-    }
-    res.status(200).json({message:'se pudo eliminar el producto'})
+      await Product.save();
+      res.status(200).json({message:'se pudo eliminar el producto'});
+    };
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de borrar los productos, disculpe las molestias', error: error.message});
   }
 };
 
 const createCancha = async (req, res) => {
+  //we request from the front the title description and url of a img
   const { Title, Description, Url} = req.body
   try {
-    const cancha = await Cancha.findOne({Title, Description})
+    //we find a product with title and description
+    const cancha = await Cancha.findOne({Title, Description});
+    //if it existe we return a response 400
     if(cancha) {
       return res.status(400).json({message: 'ya existe la cancha'});
-    }
+    };
     if(!cancha) {
       //we use the schema from the canchaModel
       const NewCancha = new Cancha ({
@@ -116,45 +99,27 @@ const getAllCancha = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
-const DeleteCanchas = async (request, response) => {
-  //we use an input where the user can write a number
-  const { id } = request.body
-=======
 const DeleteCanchas = async (req, res) => {
   //we use the id from the mongoDB
   const { id } = req.params;
->>>>>>> e596bbb3683ad35308d8e982d9aba4cf384c98c7
   try {
     // the number from the front is a id, then use these id to find the cancha in the data base
     const canchas = await Cancha.findOne({_id: id})
     //we check if the cancha exist
     if(!canchas){
-<<<<<<< HEAD
-      return response.status(400).json({message:'no existe la cancha'})
-    }
-    //if it exist we delete the cancha by id
-    await Cancha.deleteOne({_id: id})
-  } catch (error) {
-    response.status(400).json({message: 'no se pudo realizar la accion'})
-  }
-};
-
-const getAllUsers = async(request, response) => {
-=======
       return res.status(404).json({message:'no existe la cancha'})
     }
     //if it exist we delete the cancha by id
     if(canchas){
       await Cancha.deleteOne({_id: id})
-    }
+      await Cancha.save();
+    };
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de borrar canchas, disculpe las molestias', error: error.message})
   }
 }
 
 const getAllUsers = async(req, res) => {
->>>>>>> e596bbb3683ad35308d8e982d9aba4cf384c98c7
   try {
     // we use find({}) to get all from users in the data base
     const users = await User.find({});
@@ -165,95 +130,69 @@ const getAllUsers = async(req, res) => {
 };
 
 //inProgress
-// const UserDisable = async (request, response) => {
-//   const {id} = request.body
-//   try {
-//     const users = await User.findOne({_id: id})
-//     if(!users){
-//       return response.status(400).json({message:'no se encontro al usuario'})
-//     }
-//   } catch (error) {
-
-//   }
-// };
-
-<<<<<<< HEAD
-const changeRole = async(request, response) => {
-  const {id, Role} = request.body
-=======
-const changeRole = async(req, res) => {
-  const {id, newRole} = req.body
->>>>>>> e596bbb3683ad35308d8e982d9aba4cf384c98c7
+const UserDisable = async (request, response) => {
+  //we use the id from the mongoDB
+  const { id } = request.body
   try {
-    const user = await User.findOne({_id: id});
-    if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
-    }
-    if(!['client','admin'].includes(newRole)){
-      res.status(400).json({message:'rol no valido'})
-    }
-<<<<<<< HEAD
-    if([client, admin].includes(newRole)){
-      await User.save()
-      response.status(200).json({message:'se pudo cambiar el rol con exito'});
-    }
-    user.role = newRole;
-=======
-    user.Role = newRole;
->>>>>>> e596bbb3683ad35308d8e982d9aba4cf384c98c7
-    await user.save();
-    return res.status(200).json({ message: 'Se cambió el rol correctamente' });
+    const users = await User.findOne({_id: id})
+    if(!users){
+      return response.status(400).json({message:'no se encontro al usuario'})
+    };
+    if(!users.IsActive){
+      return response.status(400).json({message:'no se encontro al usuario'})
+    };
+    users.IsActive = false;
+    await User.save();
   } catch (error) {
-<<<<<<< HEAD
-    response.status(500).json({message:'error en ejecutar la funcion'});
-=======
-    res.status(500).json({message:'error en ejecutar la funcion', error: error.message})
->>>>>>> e596bbb3683ad35308d8e982d9aba4cf384c98c7
+    res.status(500).json({ message: 'No se pudieron encontrar usuarios, no se pudo realizar la accion, disculpe las molestias.', error: error.message });
   }
 };
 
+const changeRole = async(req, res) => {
+  //we request from the front the id and the role
+  const {id, Role} = req.body
+  try {
+    const user = await User.findOne({_id: id});
+    //if it doesnt exist we return a response 404
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    };
+    //if it exist we check the role (Master)
+    if(Role === 'Master' && user.Role === 'Master'){
+      return res.status(400).json({message: 'no puedes cambiar tu rol Master a admin o a cliente'})
+    }
+    //and if the role doesnt include client or admin we return and response 400
+    if(!['client','admin'].includes(Role)){
+      res.status(400).json({message:'rol no valido'})
+    };
+    user.Role = newRole;
+    await User.save();
+    return res.status(200).json({ message: 'Se cambió el rol correctamente' });
+  } catch (error) {
+    res.status(500).json({message:'error en ejecutar la funcion', error: error.message})
+  }
+}
+
 const DeleteUser = async (req, res) => {
+ //we use the id from the mongoDB
   const { id } = req.params;
   try {
     const user = await User.findOne({_id: id});
-
+    //if it doesnt exist we return a response 404
     if(!user){
       return res.status(404).json({message:'no se encontro el usuario'});
-    }
+    };
+    //if it exist we delete the user by id
     if(user){
       await User.deleteOne({_id:id})
-    }
-    res.status(200).json({message:'se pudo eliminar el usuario'})
+      await User.save()
+      res.status(200).json({message:'se pudo eliminar el usuario'})
+    };
   } catch (error) {
     res.status(500).json({message:'no se pudo realizar la accion de borrar usuario, disculpe las molestias', error: error.message})
   }
 }
 
-<<<<<<< HEAD
-
-
-module.exports = { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteCanchas, DeleteProducts, DeleteUser, changeRole}
-const DeleteProducts = async (request, response) => {
-  //we use the id from the mongoDB
-  const { id } = request.params;
-  try {
-    // the number from the front is a id, then use these id to find the product in the data base
-    const product = await Product.findOne({_id: id});
-    // we check if the product exist
-    if(!product){
-      return response.status(400).json({message: 'no existe el producto'})
-    };
-    // and if it exist we delete the product by id
-    if(product){
-      await Product.deleteOne({_id: id});
-    }
-    response.status(200).json({message:'se pudo eliminar el producto'})
-  } catch (error) {
-    response.status(400).json({message: 'no se pudo realizar la accion'});
-  }
-};
-=======
->>>>>>> e596bbb3683ad35308d8e982d9aba4cf384c98c7
 
 
 module.exports = { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteCanchas, DeleteProducts, DeleteUser, changeRole }
