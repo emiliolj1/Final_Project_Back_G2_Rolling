@@ -6,7 +6,7 @@ const user =  new Schema({
   Password: {type: String, unique:true, require: true, minlength: 5, maxlength: 20}, 
   Role: {type: String, enum:['client', 'admin', 'Master'], default:'client'},
   RefreshToken: String,
-  IsActive: true
+  IsActive: Boolean
 });
 
 

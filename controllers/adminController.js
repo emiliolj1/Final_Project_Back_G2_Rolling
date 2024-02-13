@@ -141,16 +141,16 @@ const getAllUsers = async(req, res) => {
 };
 
 //inProgress
-const UserDisable = async (request, response) => {
+const UserDisable = async (req, res) => {
   //we use the id from the mongoDB
-  const { id } = request.body
+  const { id } = request.params
   try {
     const users = await User.findOne({_id: id})
     if(!users){
-      return response.status(400).json({message:'no se encontro al usuario'})
+      return res.status(400).json({message:'no se encontro al usuario'})
     };
     if(!users.IsActive){
-      return response.status(400).json({message:'no se encontro al usuario'})
+      return res.status(400).json({message:'no se encontro al usuario'})
     };
     users.IsActive = false;
     await User.save();
@@ -206,4 +206,4 @@ const DeleteUser = async (req, res) => {
 
 
 
-module.exports = { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteCanchas, DeleteProducts, DeleteUser, changeRole }
+module.exports = { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteCanchas, DeleteProducts, DeleteUser, changeRole, UserDisable }

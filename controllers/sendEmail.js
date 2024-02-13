@@ -8,7 +8,7 @@ const sendEmail = async (req, res) => {
       const transporter = nodemailer.createTransport({
         host: "smtp.ethereal.email",
         port:587,
-        secure: false,
+        secure: true,
         service: "gmail",
         auth: {
           user: process.env.EMAIL_USER,
@@ -16,27 +16,30 @@ const sendEmail = async (req, res) => {
         },
       });
       
-      console.log(transporter);
-
       const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,
         subject: 'Gracias por contactarte con nosotros',
-        text: `aaaaaaaaaaaaaaa`,
+        text: `${name}`,
       };
-      //console.log(mailOptions);
-      transporter.sendMail(mailOptions, (error, info) => {
-        if(error){
-          console.error("Error al enviar el correo:", error);
-          res.status(500).json({error})
-        }else{
-          console.log("email enviado");
-          res.status(200).json(req.body)
-        }
-      });
+
+      //console.log(transporter)
+      const info = transporter.sendMail(mailOptions);
+      console.log("Correo enviado:", info.messageId)
+      res.status(200).json({message: 'Correo enviado correctamente', messageId: info.messageId })
     } catch (error) {
-      res.status(500).json({message: 'Email sent wrongly'})
+      console.error("Error al enviar el correo:", error);
+      res.status(500).json({message: 'Email sent wrongly', error: error.message })
     }
 }
 
 module.exports = { sendEmail };
+
+// , (error, info) => {
+//   if(error){
+//     console.error("Error al enviar el correo:", error);
+//     res.status(500).json({error})
+//   }else{
+//     console.log("email enviado");
+//   }
+// }

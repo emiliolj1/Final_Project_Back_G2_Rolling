@@ -3,7 +3,7 @@ const { response, request } = require('express');
 const { Cancha } = require('../models/canchaModel')
 const { DateTime } = require("luxon");
 
-//...
+//is workin
 const bookins = async (req, res) => {
     const {date, time, name, cancha} = req.body
     try {
@@ -48,14 +48,22 @@ const getAllBookin = async (req, res) => {
 const checkTime = async (req, res) => {
     try {
         const bookin = await Cancha.find({Array: {$all: date}})
+
         console.log(bookin)
+
         let arrayfromback = bookin
+
         let [date] = arrayfromback;
+
         let dateBack = new Date (date.parse())
+
         let now = new Date()
+
+
         if(!arrayfromback){
             return response.status(400).json({message: 'No se encontraron reservas'})
         }
+        
         if(dateBack < now){
             await Cancha.deleteOne({Array})
             response.status(200).json({})
@@ -83,11 +91,12 @@ const checkTime = async (req, res) => {
     }
 }
 
-//...
+//dont work
 const deleteBookin = async (req, res) => {
     const { id } = req.params;
     try {
-        const bookin = await Cancha.findOne({Array:{_id:id}});
+        const bookin = await Cancha.find({Array});
+        console.log(bookin)
         if(!bookin){
             return res.status(400).json({message:'no existe la reserva'})
         }
@@ -98,6 +107,7 @@ const deleteBookin = async (req, res) => {
     } catch (error) {
         res.status(500).json({message:'no se pudo realizar la accion, disculpe las molestias'})
     }
-}
+};
 
-module.exports = { bookins, getAllBookin, checkTime, deleteBookin}
+
+module.exports = { bookins, getAllBookin, checkTime, deleteBookin }
