@@ -44,70 +44,30 @@ const getAllBookin = async (req, res) => {
     }
 }
 
-//dont work
-const checkTime = async (req, res) => {
-    try {
-        const bookin = await Cancha.find({Array: {$all: date}})
 
-        console.log(bookin)
-
-        let arrayfromback = bookin
-
-        let [date] = arrayfromback;
-
-        let dateBack = new Date (date.parse())
-
-        let now = new Date()
-
-
-        if(!arrayfromback){
-            return response.status(400).json({message: 'No se encontraron reservas'})
-        }
-        
-        if(dateBack < now){
-            await Cancha.deleteOne({Array})
-            response.status(200).json({})
-        }
-        
-        // const canchas = await Cancha.find();
-        // for (const cancha of canchas) {
-        //     const arrayFromBack = cancha.Array;
-
-        //     for (const fecha of arrayFromBack) {
-
-        //         const dateBack = new Date(fecha);
-
-        //         const now = new Date();
-
-        //         if (dateBack < now) {
-        //             await Cancha.updateOne({ _id: cancha._id }, { $set: { Array: [] } });
-        //         }
-        //     }
-        // }
-
-        response.status(200).json({ message: 'Proceso de verificación completado' });
-    } catch (error) {
-        response.status(500).json({message:'no se pudo realizar la accion, disculpe las molestias'})
-    }
-}
-
-//dont work
+//is workin
 const deleteBookin = async (req, res) => {
-    const { id } = req.params;
+    const { id, CanchaName } = req.params;
     try {
-        const bookin = await Cancha.find({Array});
-        console.log(bookin)
-        if(!bookin){
-            return res.status(400).json({message:'no existe la reserva'})
+        // Definimos la operacion pull en una variable solo para simplificar la llamada luego
+        const deleteOperation = {
+            $pull: {
+                Array: { _id: '65c520df0758e4beb951f8dc' } //probemos con el id ahora en lugar
+            }
         }
-        if(bookin){
-            
-        };
-        res.status(200).json({message:'se pudo eliminar con exito'})
-    } catch (error) {
-        res.status(500).json({message:'no se pudo realizar la accion, disculpe las molestias'})
+
+        // Buscamos y encontramos la cancha
+        await Cancha.findOneAndUpdate(
+            { _id: '65c4462a39c089d661949a8b' },
+            deleteOperation,
+            { new: true }
+        )
+        res.status(200).json({ message: 'Successfully deleted' })
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({message:'no se pudo realizar la accion, disculpe las molestias'})
     }
 };
 
 
-module.exports = { bookins, getAllBookin, checkTime, deleteBookin }
+module.exports = { bookins, getAllBookin, deleteBookin }

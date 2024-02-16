@@ -149,10 +149,10 @@ const UserDisable = async (req, res) => {
     if(!users){
       return res.status(400).json({message:'no se encontro al usuario'})
     };
-    if(!users.IsActive){
-      return res.status(400).json({message:'no se encontro al usuario'})
+    if(!users.isActive){
+      return res.status(400).json({message:'el usuario ya se encuentra inactivo.'})
     };
-    users.IsActive = false;
+    users.isActive = false;
     await User.save();
   } catch (error) {
     res.status(500).json({ message: 'No se pudieron encontrar usuarios, no se pudo realizar la accion, disculpe las molestias.', error: error.message });
@@ -169,14 +169,14 @@ const changeRole = async(req, res) => {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     };
     //if it exist we check the role (Master)
-    if(Role === 'Master' && user.Role === 'Master'){
-      return res.status(400).json({message: 'no puedes cambiar tu rol Master a admin o a cliente'})
+    if(Role === 'Master' && user.role === 'Master'){
+      return res.status(400).json({message: 'no puedes cambiar tu o el rol de un miembro Master a admin o a cliente'})
     }
     //and if the role doesnt include client or admin we return and response 400
     if(!['client','admin'].includes(Role)){
       res.status(400).json({message:'rol no valido'})
     };
-    user.Role = newRole;
+    user.role = newRole;
     await User.save();
     return res.status(200).json({ message: 'Se cambió el rol correctamente' });
   } catch (error) {
