@@ -143,7 +143,7 @@ const getAllUsers = async(req, res) => {
 //inProgress
 const UserDisable = async (req, res) => {
   //we use the id from the mongoDB
-  const { id } = req.params
+  const { id } = req.body
   try {
     const users = await User.findOne({_id: id})
     if(!users){
@@ -153,7 +153,8 @@ const UserDisable = async (req, res) => {
       return res.status(400).json({message:'el usuario ya se encuentra inactivo.'})
     };
     users.isActive = false;
-    await User.save();
+    await users.save();
+    res.status(200).json({message: 'se pudo desactivar el usuario con exito'})
   } catch (error) {
     res.status(500).json({ message: 'No se pudieron encontrar usuarios, no se pudo realizar la accion, disculpe las molestias.', error: error.message });
   }
@@ -162,6 +163,7 @@ const UserDisable = async (req, res) => {
 const changeRole = async(req, res) => {
   //we request from the front the id and the role
   const {id, Role} = req.body
+  console.log(req.body);
   try {
     const user = await User.findOne({_id: id});
     //if it doesnt exist we return a response 404
@@ -169,15 +171,15 @@ const changeRole = async(req, res) => {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     };
     //if it exist we check the role (Master)
-    if(Role === 'Master' && user.role === 'Master'){
-      return res.status(400).json({message: 'no puedes cambiar tu o el rol de un miembro Master a admin o a cliente'})
+    if(Role !== 'Master' && user.role === 'Master'){
+      return res.status(400).json({message: 'no puedes cambiar tu rol de Master a admin o a cliente'})
     }
     //and if the role doesnt include client or admin we return and response 400
-    if(!['client','admin'].includes(Role)){
+    if(!['client','admin', 'Master'].includes(Role)){
       res.status(400).json({message:'rol no valido'})
     };
-    user.role = newRole;
-    await User.save();
+    user.role = Role;
+    await user.save();
     return res.status(200).json({ message: 'Se cambió el rol correctamente' });
   } catch (error) {
     res.status(500).json({message:'error en ejecutar la funcion', error: error.message})
@@ -186,7 +188,7 @@ const changeRole = async(req, res) => {
 
 const DeleteUser = async (req, res) => {
  //we use the id from the mongoDB
-  const { id } = req.params;
+  const { id } = req.body;
   try {
     const user = await User.findOne({_id: id});
     //if it doesnt exist we return a response 404
@@ -194,11 +196,8 @@ const DeleteUser = async (req, res) => {
       return res.status(404).json({message:'no se encontro el usuario'});
     };
     //if it exist we delete the user by id
-    if(user){
-      await User.deleteOne({_id:id})
-      await User.save()
-      res.status(200).json({message:'se pudo eliminar el usuario'})
-    };
+    await user.deleteOne({_id:id})
+    res.status(200).json({message:'se pudo eliminar el usuario'})
   } catch (error) {
     res.status(500).json({message:'no se pudo realizar la accion de borrar usuario, disculpe las molestias', error: error.message})
   }
