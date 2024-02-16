@@ -33,13 +33,5 @@ const sendEmail = async (req, res) => {
     }
 }
 
-module.exports = { sendEmail };
 
-// , (error, info) => {
-//   if(error){
-//     console.error("Error al enviar el correo:", error);
-//     res.status(500).json({error})
-//   }else{
-//     console.log("email enviado");
-//   }
-// }
+module.exports = { sendEmail };

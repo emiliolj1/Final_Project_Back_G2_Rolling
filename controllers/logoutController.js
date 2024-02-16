@@ -16,7 +16,7 @@ const handleLogout = async ( req, res ) => {
             return response.status(200).json({message:'Cookies borradas'})
         }
 
-        user.RefreshToken = '';
+        user.refreshToken = '';
         await user.save()
 
         res.clearCookies('refreshToken', {

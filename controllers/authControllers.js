@@ -15,7 +15,7 @@ const loginUser =  async (req, res) => {
     }
 
     // the user exist, their password is the same?
-    const isMatch = bcrypt.compareSync(password, user.Password)
+    const isMatch = bcrypt.compareSync(password, user.password)
     if(!isMatch){
       return res.status(400).json({ message: 'contraseña invalida', error: error.message})
     }
@@ -23,9 +23,10 @@ const loginUser =  async (req, res) => {
     const accessToken = jwt.sign(
       { 
         id: user._id,
-        email: user.Email,
-        Name: user.Name,
-        role: user.Role
+        Email: user.email,
+        Name: user.name,
+        Role: user.role,
+        IsActive: user.isActive
       }, 
       process.env.ACCESS_TOKEN_SECRET,
       {
@@ -36,9 +37,10 @@ const loginUser =  async (req, res) => {
     const refreshToken = jwt.sign(
       {
         id: user._id,
-        email: user.Email,
-        Name: user.Name,
-        role: user.Role
+        Email: user.email,
+        Name: user.name,
+        Role: user.role,
+        IsActive: user.isActive
       },
       process.env.REFRESH_TOKEN_SECRET,
       {
@@ -47,10 +49,10 @@ const loginUser =  async (req, res) => {
     )
 
     // saving the refreshtoken in the user
-    user.RefreshToken = refreshToken;
+    user.refreshToken = refreshToken;
     await user.save()
 
-    response.cookie('refreshToken', refreshToken, { 
+    res.cookie('refreshToken', refreshToken, { 
       httpOnly: true, 
       sameSite: 'None', 
       secure: true, 
