@@ -143,7 +143,7 @@ const getAllUsers = async(req, res) => {
 //inProgress
 const UserDisable = async (req, res) => {
   //we use the id from the mongoDB
-  const { id } = request.params
+  const { id } = req.params
   try {
     const users = await User.findOne({_id: id})
     if(!users){
