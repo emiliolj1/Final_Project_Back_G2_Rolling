@@ -52,13 +52,13 @@ const deleteBookin = async (req, res) => {
         // Definimos la operacion pull en una variable solo para simplificar la llamada luego
         const deleteOperation = {
             $pull: {
-                Array: { _id: '65c520df0758e4beb951f8dc' } //probemos con el id ahora en lugar
+                Array: { _id: id } //probemos con el id ahora en lugar
             }
         }
 
         // Buscamos y encontramos la cancha
         await Cancha.findOneAndUpdate(
-            { _id: '65c4462a39c089d661949a8b' },
+            { Title: CanchaName},
             deleteOperation,
             { new: true }
         )
