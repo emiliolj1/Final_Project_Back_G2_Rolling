@@ -47,7 +47,7 @@ const getAllBookin = async (req, res) => {
 
 //is workin
 const deleteBookin = async (req, res) => {
-    const { id, CanchaName } = req.params;
+    const { id, canchaName } = req.body;
     try {
         // Definimos la operacion pull en una variable solo para simplificar la llamada luego
         const deleteOperation = {
@@ -58,7 +58,7 @@ const deleteBookin = async (req, res) => {
 
         // Buscamos y encontramos la cancha
         await Cancha.findOneAndUpdate(
-            { Title: CanchaName},
+            { Title: canchaName },
             deleteOperation,
             { new: true }
         )
