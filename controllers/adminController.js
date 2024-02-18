@@ -50,21 +50,42 @@ const DeleteProducts = async (req, res) => {
   const { id } = req.params;
   try {
     // the number from the front is a id, then use these id to find the product in the data base
-    const product = await Product.findOne({_id: id});
+    const product = await Product.find({_id: id});
     // we check if the product exist
     if(!product){
       return res.status(404).json({message: 'no existe el producto'})
     };
+
     // and if it exist we delete the product by id
     if(product){
       await Product.deleteOne({_id: id});
-      await Product.save();
-      res.status(200).json({message:'se pudo eliminar el producto'});
     };
+    res.status(200).json({message:'se pudo eliminar el producto'});
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de borrar los productos, disculpe las molestias', error: error.message});
   }
 };
+
+const editProduct = async (req, res) => {
+  const {Title, Url, Description, Price} = req.body
+  try {
+    const product  = await Product.findOne({ Title: Title })
+    // we check if the product exist
+    if(!product){
+      return res.status(404).json({message: 'no existe el producto'})
+    }
+    //update the Url and/or the description
+    if (Title) product.Title =  Title
+    if (Url) product.Url = Url;
+    if (Description) product.Description = Description;
+    if (Price) product.Price = Price
+    await product.save();
+
+    res.status(200).json({message:'se pudo cambiar con exito'})
+  } catch (error) {
+    res.status(500).json({message: 'no se pudo realizar la accion de editar los productos, disculpe las molestias', error: error.message});
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -111,7 +132,7 @@ const DeleteCanchas = async (req, res) => {
   const { id } = req.params;
   try {
     // the number from the front is a id, then use these id to find the cancha in the data base
-    const canchas = await Cancha.findOne({_id: id})
+    const canchas = await Cancha.find({_id: id})
     //we check if the cancha exist
     if(!canchas){
       return res.status(404).json({message:'no existe la cancha'})
@@ -119,8 +140,8 @@ const DeleteCanchas = async (req, res) => {
     //if it exist we delete the cancha by id
     if(canchas){
       await Cancha.deleteOne({_id: id})
-      await Cancha.save();
     };
+    res.status(200).json({message: 'se pudo borrar con exito'})
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de borrar canchas, disculpe las molestias', error: error.message})
   }
@@ -143,7 +164,7 @@ const getAllUsers = async(req, res) => {
 //inProgress
 const UserDisable = async (req, res) => {
   //we use the id from the mongoDB
-  const { id } = req.body
+  const { id } = req.params;
   try {
     const users = await User.findOne({_id: id})
     if(!users){
@@ -173,7 +194,7 @@ const changeRole = async(req, res) => {
     //if it exist we check the role (Master)
     if(Role !== 'Master' && user.role === 'Master'){
       return res.status(400).json({message: 'no puedes cambiar tu rol de Master a admin o a cliente'})
-    }
+    };
     //and if the role doesnt include client or admin we return and response 400
     if(!['client','admin', 'Master'].includes(Role)){
       res.status(400).json({message:'rol no valido'})
@@ -188,7 +209,7 @@ const changeRole = async(req, res) => {
 
 const DeleteUser = async (req, res) => {
  //we use the id from the mongoDB
-  const { id } = req.body;
+  const { id } = req.params;
   try {
     const user = await User.findOne({_id: id});
     //if it doesnt exist we return a response 404
@@ -205,4 +226,4 @@ const DeleteUser = async (req, res) => {
 
 
 
-module.exports = { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteCanchas, DeleteProducts, DeleteUser, changeRole, UserDisable }
+module.exports = { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteCanchas, DeleteProducts, DeleteUser, changeRole, UserDisable, editProduct }

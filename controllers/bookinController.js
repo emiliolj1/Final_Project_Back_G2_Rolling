@@ -1,20 +1,21 @@
 require('dotenv').config();
-const { response, request } = require('express');
+const { res, req } = require('express');
 const { Cancha } = require('../models/canchaModel')
 const { DateTime } = require("luxon");
 
 //is workin
 const bookins = async (req, res) => {
     const {date, time, name, cancha} = req.body
+    console.log(req.body);
     try {
-        let nombre = cancha
-        let dateString = date
-        let timeString = time 
-        let concat = dateString + 'T' + timeString
-        let DateISO = new Date(concat)
-        let now =  new Date()
+        let nombre = cancha;
+        let dateString = date;
+        let timeString = time;
+        let concat = dateString + 'T' + timeString;
+        let DateISO = new Date(concat);
+        let now =  new Date();
         console.log(DateISO);
-        let canchas = await Cancha.findOne({Title : nombre})
+        let canchas = await Cancha.findOne({Title : nombre});
         
         if(DateISO < now ){
             return res.status(400).json({message: 'no puedes hacer reservas para el pasado'})
