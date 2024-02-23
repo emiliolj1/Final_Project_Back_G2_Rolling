@@ -183,25 +183,43 @@ const UserDisable = async (req, res) => {
 
 const changeRole = async(req, res) => {
   //we request from the front the id and the role
-  const {id, Role} = req.body
-  console.log(req.body);
+  const { id } = req.params;
   try {
-    const user = await User.findOne({_id: id});
-    //if it doesnt exist we return a response 404
-    if (!user) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+    const requestUser = await User.findOne({_id: req.userId});
+    if(requestUser.role !== 'Master'){
+      return res.status(403).json({message: 'Solo los usuarios con rol "Master" pueden cambiar roles de otros usuarios'})
     };
-    //if it exist we check the role (Master)
-    if(Role !== 'Master' && user.role === 'Master'){
-      return res.status(400).json({message: 'no puedes cambiar tu rol de Master a admin o a cliente'})
+    const user = await User.findOne({ _id: id });
+    if(!user){
+      return res.status(400).json({message:'el usuario no existe'})
     };
-    //and if the role doesnt include client or admin we return and response 400
-    if(!['client','admin', 'Master'].includes(Role)){
-      res.status(400).json({message:'rol no valido'})
+    if (role === 'Master') {
+      return res.status(400).json({ message: 'Solo los usuarios con rol "Master" pueden tener este rol' });
     };
-    user.role = Role;
+    if(user.role === 'admin'){
+      user.role = 'client'
+    } else {
+      user.role = 'admin'
+    };
     await user.save();
     return res.status(200).json({ message: 'Se cambió el rol correctamente' });
+
+    
+    //if it doesnt exist we return a response 404
+    // if (!user) {
+    //   return res.status(404).json({ message: 'Usuario no encontrado' });
+    // };
+    // if(user.role !== 'Master'){
+    //   return res.status(400).json({message: 'no puedes cambiar el rol de otras personas'})
+    // }
+    //if it exist we check the role (Master)
+    // if(Role !== 'Master' && user.role === 'Master'){
+    //   return res.status(400).json({message: 'no puedes cambiar tu rol de Master a admin o a cliente'})
+    // };
+    //and if the role doesnt include client or admin we return and response 400
+    // if(!['client','admin', 'Master'].includes(Role)){
+    //   res.status(400).json({message:'rol no valido'})
+    // };
   } catch (error) {
     res.status(500).json({message:'error en ejecutar la funcion', error: error.message})
   }

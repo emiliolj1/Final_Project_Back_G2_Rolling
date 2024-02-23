@@ -12,7 +12,7 @@ const verifytoken = (request, response, next) => {
     if (error) {
       return response.status(400).json(error)
     }
-
+    require.userId = user.id
     next()
   })
 }
