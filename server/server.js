@@ -26,8 +26,10 @@ const DeleteCancha = require('../router/adminRoute');
 const DeleteUser = require('../router/adminRoute');
 const deleteBookin = require('../router/bookinRoutes');
 
-const changePassword = require('../router/userRoute');
 const changeRole = require('../router/adminRoute');//path controllers
+const changePassword = require('../router/userRoute');
+const editProduct = require('../router/adminRoute')
+
 
 //Middleware
 app.use(bodyParser.json())
@@ -45,6 +47,7 @@ app.use('/',logOut)
 
 app.use('/', changePassword); //paths
 app.use('/', changeRole)
+app.use('/', editProduct)
 
 app.use('/', createProduct); // post
 app.use('/', createCancha);
