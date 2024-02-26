@@ -227,9 +227,11 @@ const changeRole = async(req, res) => {
 
 const DeleteUser = async (req, res) => {
  //we use the id from the mongoDB
-  const { id } = req.params;
+  const { id } = req.body;
+  console.log(req.body);
   try {
     const user = await User.findOne({_id: id});
+    console.log(user);
     //if it doesnt exist we return a response 404
     if(!user){
       return res.status(404).json({message:'no se encontro el usuario'});
