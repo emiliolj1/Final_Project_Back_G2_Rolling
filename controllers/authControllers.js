@@ -11,7 +11,7 @@ const loginUser =  async (req, res) => {
     const user = await User.findOne({ email })
     // searching for the user if it exists 
     if(!user){
-      return res.status(400).json({message: 'usuario no existe'})
+      return res.status(404).json({message: 'usuario no existe'})
     }
     if(user.isActive === false){
       return res.status(401).json({message:'tu cuenta fue desactivada.'})
