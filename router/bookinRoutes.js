@@ -1,6 +1,6 @@
-const { Router } = require('express')
-const route = Router()
-const { bookins, deleteBookin } = require('../controllers/bookinController')
+const { Router } = require('express');
+const route = Router();
+const { bookins, deleteBookin } = require('../controllers/bookinController');
 
 
 route.post('/reserva', bookins);
