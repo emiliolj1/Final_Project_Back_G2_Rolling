@@ -64,4 +64,4 @@ const deleteBookin = async (req, res) => {
 };
 
 
-module.exports = { bookins, getAllBookin, deleteBookin }
+module.exports = { bookins, deleteBookin}
