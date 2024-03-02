@@ -14,12 +14,11 @@ const createCancha = require('../router/adminRoute');
 const creatBookin = require('../router/bookinRoutes');
 const addUser = require('../router/userRoute');
 const loginUser = require('../router/authRoutes');
-const logOut = require('../router/logoutRoutes')
+const logOut = require('../router/logoutRoutes');
 
 const getAllUsers = require('../router/userRoute');//get controllers
 const getAllProducts = require('../router/adminRoute');
 const getAllCanchas = require('../router/adminRoute');
-const getAllBookins = require('../router/bookinRoutes');
 
 const DeleteProduct = require('../router/adminRoute');//delete controllers
 const DeleteCancha = require('../router/adminRoute');
@@ -28,7 +27,7 @@ const deleteBookin = require('../router/bookinRoutes');
 
 const changeRole = require('../router/adminRoute');//path controllers
 const changePassword = require('../router/userRoute');
-const editProduct = require('../router/adminRoute')
+
 
 
 //Middleware
@@ -43,11 +42,11 @@ app.use(cookieParser())
 //Routes
 app.use('/', addUser);
 app.use('/', loginUser);
-app.use('/',logOut)
+app.use('/', logOut);
 
 app.use('/', changePassword); //paths
-app.use('/', changeRole)
-app.use('/', editProduct)
+app.use('/', changeRole);
+
 
 app.use('/', createProduct); // post
 app.use('/', createCancha);
@@ -56,7 +55,6 @@ app.use('/', creatBookin);
 app.use('/', getAllProducts); // get
 app.use('/', getAllUsers);
 app.use('/', getAllCanchas);
-app.use('/', getAllBookins);
 
 app.use('/', DeleteCancha); // delete's
 app.use('/', DeleteProduct);
