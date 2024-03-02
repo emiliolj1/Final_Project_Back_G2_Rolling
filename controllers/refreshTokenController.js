@@ -7,13 +7,13 @@ const handleRefreshToken = async (req, res) => {
         const cookies = req.cookies;
         if(!cookies?.refresToken){
             return res.status(401).json({message:'no permitido'})
-        }
+        };
         const refreshToken = cookies.refresToken;
 
         const user =  await User.findOne({ refreshToken })
         if(!user){
             return res.status(403).json({message:'no permitido'})
-        }
+        };
 
         jwt.verify(
             refreshToken,
@@ -29,7 +29,7 @@ const handleRefreshToken = async (req, res) => {
         )
     } catch (error) {
         res.status(500).json(error)
-    }
-}
+    };
+};
 
 module.exports = { handleRefreshToken };

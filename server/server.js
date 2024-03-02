@@ -19,7 +19,6 @@ const logOut = require('../router/logoutRoutes')
 const getAllUsers = require('../router/userRoute');//get controllers
 const getAllProducts = require('../router/adminRoute');
 const getAllCanchas = require('../router/adminRoute');
-const getAllBookins = require('../router/bookinRoutes');
 
 const DeleteProduct = require('../router/adminRoute');//delete controllers
 const DeleteCancha = require('../router/adminRoute');
@@ -28,7 +27,7 @@ const deleteBookin = require('../router/bookinRoutes');
 
 const changeRole = require('../router/adminRoute');//path controllers
 const changePassword = require('../router/userRoute');
-const editProduct = require('../router/adminRoute')
+
 
 
 //Middleware
@@ -47,7 +46,7 @@ app.use('/',logOut)
 
 app.use('/', changePassword); //paths
 app.use('/', changeRole)
-app.use('/', editProduct)
+
 
 app.use('/', createProduct); // post
 app.use('/', createCancha);

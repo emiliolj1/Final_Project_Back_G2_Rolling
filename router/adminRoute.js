@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const route = Router()
-const { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteProducts, DeleteCanchas, changeRole, DeleteUser, UserDisable, editProduct } = require('../controllers/adminController')
+const { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteProducts, DeleteCanchas, changeRole, DeleteUser, UserDisable} = require('../controllers/adminController')
 
 //get all documents
 route.get('/admin/getUsers', getAllUsers)
@@ -14,7 +14,6 @@ route.post('/admin/createCancha', createCancha)
 // Path all products canchas and users
 route.patch('/admin/changeRole', changeRole)
 route.patch('/admin/userActive', UserDisable)
-route.patch('/admin/changeProduct', editProduct)
 
 // Delete al products and canchas
 route.delete('/admin/deleteProduct', DeleteProducts)

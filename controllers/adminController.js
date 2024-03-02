@@ -10,10 +10,10 @@ const { Cancha } = require('../models/canchaModel')
 
 const createProduct = async (req, res) => {
   //we request from the front the title description price and url of a img
-  const { Title, Description, Price, Url} = req.body
+  const { Title, Description, Price, Url} = req.body;
   try {
     //we find a product with title and description
-    const product = await Product.findOne({Title, Description})
+    const product = await Product.findOne({Title, Description});
     //if it existe we return a response 400
     if(product) {
       return res.status(400).json({message: 'ya existe el producto'});
@@ -29,7 +29,7 @@ const createProduct = async (req, res) => {
       //save the new product in the data base
       await NewProduct.save();
       res.status(200).json({message: 'se creo con exito'});
-    }
+    };
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de crear productos, disculpe las molestias.', error: error.message});
   };
@@ -53,7 +53,7 @@ const DeleteProducts = async (req, res) => {
     const product = await Product.findOne({_id: id});
     // we check if the product exist
     if(!product){
-      return res.status(404).json({message: 'no existe el producto'})
+      return res.status(404).json({message: 'no existe el producto'});
     };
     // and if it exist we delete the product by id
     if(product){
@@ -62,29 +62,9 @@ const DeleteProducts = async (req, res) => {
     res.status(200).json({message:'se pudo eliminar el producto'});
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de borrar los productos, disculpe las molestias', error: error.message});
-  }
+  };
 };
 
-const editProduct = async (req, res) => {
-  const {Title, Url, Description, Price} = req.body
-  try {
-    const product  = await Product.findOne({ Title: Title })
-    // we check if the product exist
-    if(!product){
-      return res.status(404).json({message: 'no existe el producto'})
-    }
-    //update the Url and/or the description
-    if (Title) product.Title =  Title
-    if (Url) product.Url = Url;
-    if (Description) product.Description = Description;
-    if (Price) product.Price = Price
-    await product.save();
-
-    res.status(200).json({message:'se pudo cambiar con exito'})
-  } catch (error) {
-    res.status(500).json({message: 'no se pudo realizar la accion de editar los productos, disculpe las molestias', error: error.message});
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -110,10 +90,10 @@ const createCancha = async (req, res) => {
       //then we save the new cancha
       await NewCancha.save();
       res.status(200).json({message: 'se creo con exito'});
-    }
+    };
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de crear cancha, disculpe las molestias', error: error.message});
-  }
+  };
 };
 
 const getAllCancha = async (req, res) => {
@@ -129,14 +109,13 @@ const getAllCancha = async (req, res) => {
 const DeleteCanchas = async (req, res) => {
   //we use the id from the mongoDB
   const { id } = req.body;
-  console.log(id);
   try {2
     // the number from the front is a id, then use these id to find the cancha in the data base
     const canchas = await Cancha.findOne({_id: id})
     //we check if the cancha exist
     if(!canchas){
       return res.status(404).json({message:'no existe la cancha'})
-    }
+    };
     //if it exist we delete the cancha by id
     if(canchas){
       await Cancha.deleteOne({_id: id})
@@ -144,8 +123,8 @@ const DeleteCanchas = async (req, res) => {
     res.status(200).json({message: 'se pudo borrar con exito'})
   } catch (error) {
     res.status(500).json({message: 'no se pudo realizar la accion de borrar canchas, disculpe las molestias', error: error.message})
-  }
-}
+  };
+};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -158,54 +137,64 @@ const getAllUsers = async(req, res) => {
     res.status(200).json(users);
   } catch (error) {
     res.status(500).json({ message: 'No se pudieron encontrar usuarios, no se pudo realizar la accion, disculpe las molestias.', error: error.message });
-  }
+  };
 };
 
 const UserDisable = async (req, res) => {
   //we use the id from the mongoDB
   const { id } = req.body;
   try {
+    // we use findone({}) to get the user with the same id
     const users = await User.findOne({_id: id})
+    // we check if the user exist
     if(!users){
       return res.status(400).json({message:'no se encontro al usuario'})
-    }
+    };
+    // we check if the user is master
     if(users.role === "Master"){
       return res.status(401).json({message: 'No puedes cambiar tu estado si eres Master'})
-    }
+    };
+    //and if the user is not active we execute the next.
     if(!users.isActive){
       users.isActive = true;
     } else {
       users.isActive = false;
-    }
+    };
+    //we save it in the data base
     await users.save();
     res.status(200).json({message: 'se pudo desactivar el usuario con exito'})
   } catch (error) {
     res.status(500).json({ message: 'No se pudieron encontrar usuarios, no se pudo realizar la accion, disculpe las molestias.', error: error.message });
-  }
+  };
 };
 
 const changeRole = async(req, res) => {
   //we request from the front the id and the role
   const { id } = req.body;
   try {
+     // we use findone({}) to get the user with the same id
     const user = await User.findOne({ _id: id });
+    // we check if the user exist
     if(!user){
       return res.status(400).json({message:'el usuario no existe'})
     };
+    //we check if the role of the user is ecual to master
     if (user.role === 'Master') {
       return res.status(401).json({ message: 'No puedes cambiar tu rol de "Master"' });
     };
+    //if user is an admin we change the role to client and if the role is client we change to admin
     if(user.role === 'admin'){
       user.role = 'client'
     } else {
       user.role = 'admin'
     };
+    //we save it in the data base
     await user.save();
     return res.status(200).json({ message: 'Se cambió el rol correctamente' });
   } catch (error) {
     res.status(500).json({message:'error en ejecutar la funcion', error: error.message})
-  }
-}
+  };
+};
 
 const DeleteUser = async (req, res) => {
  //we use the id from the mongoDB
@@ -229,4 +218,4 @@ const DeleteUser = async (req, res) => {
 
 
 
-module.exports = { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteCanchas, DeleteProducts, DeleteUser, changeRole, UserDisable, editProduct }
+module.exports = { createProduct, createCancha, getAllProducts, getAllCancha, getAllUsers, DeleteCanchas, DeleteProducts, DeleteUser, changeRole, UserDisable}
