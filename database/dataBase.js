@@ -2,13 +2,9 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 const connectionDB = async () => {
-  try {
-    await mongoose.connect(process.env.DB_CONNECTION, { autoReconnect: true}, () => console.log('CONNECTED TO DB'))
-    console.log('Succesfull connection to the DB')
-  } catch (error) {
-    console.log('oh, sorry we cant connect to the DB');
-    console.log(error);
-  }
+  await mongoose.connect(process.env.DB_CONNECTION)
+  .then( success => console.log('DB CONNECTED'))
+  .catch(error => console.log(error))
 }
 
 connectionDB();
